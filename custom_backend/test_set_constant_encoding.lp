@@ -1,5 +1,5 @@
 % Generate labels based on n.
 labels(1..n).
-current_constant(n, n).
+current_n(n).
 #show labels/1.
-#show current_constant/2.
+#show current_n/1.
