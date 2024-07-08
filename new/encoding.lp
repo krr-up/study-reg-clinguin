@@ -51,4 +51,4 @@ in(E1,before(A)) :- set(before(A)), in(E1,s(I)), in(E2,A), in(E2,s(J)), I < J.
 
 % display
  #show.
- #show (M,I) : in(M,s(I)).
+ %#show (M,I) : in(M,s(I)).

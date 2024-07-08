@@ -4,7 +4,7 @@ from typing import Dict, Tuple, Any
 
 class CustomBackend(ClingoBackend):
     def __init__(self, args: Any):
-        # Parse and store command-line constants
+        # Parse and store constants
         self.current_constants = {
             name: value
             for const in (args.const or [])
@@ -41,18 +41,34 @@ class CustomBackend(ClingoBackend):
             
             if self.current_constants.get(name) != new_value:
                 self.current_constants[name] = new_value
-                self._outdate()
-                self._init_ctl()
+                self.restart() 
             return True, f"Constant {name} updated successfully to {new_value}"
+        except ValueError:
+            return False, f"Error updating constant {name}: Provided value must be an integer"
         except Exception as e:
             return False, f"Error updating constant {name}: {str(e)}"
 
     @property
     def _generate_constant_facts(self) -> str:
-        """Generate Prolog facts for current constants."""
-        return "\n".join(f"current_constant({name},{value})." 
-                         for name, value in self.current_constants.items()) + "\n"
+        """Generate facts for current constants."""
+        facts = [f"current_constant({name},{value})." for name, value in self.current_constants.items()]
+        facts.append(f"n({self.current_constants.get('n', '0')}).")
+        return "\n".join(facts) + "\n"
 
     def get_current_constants(self) -> Dict[str, str]:
         """Return the current constants."""
         return self.current_constants.copy()
+
+    def restart(self):
+        """Restart the Clingo control object with the current setup."""
+        self._init_setup()  # Reinitialize setup
+        self._outdate()  # Mark the current state as outdated
+        self._init_ctl()  # Reinitialize the Clingo control
+        self._ground()  # Ground the program
+        self._ui_state = None  # Reset UI state
+
+    def get(self):
+        """Get the current UI state, updating it if necessary."""
+        if self._ui_state is None:
+            self._update_ui_state()
+        return super().get()
