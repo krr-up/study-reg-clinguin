@@ -1,10 +1,11 @@
 % Uses the n fact from the domain state instead of semester(1..n)
-semester(I) :- n(N), I = 1..N.
+semester(I) :- _clinguin_const(n,N), I = 1..N.
+% semester(1..4).
 
 % Debug information
 elem(debug_info, label, w).
 attr(debug_info, order, 0).
-attr(debug_info, label, @concat("Current n value: ", N)) :- n(N).
+attr(debug_info, label, @concat("Current n value: ", N)) :- _clinguin_const(n,N).
 
 elem(w, window, root).
 attr(w, flex_direction, column).
@@ -19,7 +20,7 @@ when(n_input, input, context, (new_n_value, _value)).
 elem(update_n_button, button, w).
 attr(update_n_button, order, 2).
 attr(update_n_button, label, "Update n").
-when(update_n_button, click, call, update_constant("n", _context_value(new_n_value))).
+when(update_n_button, click, call, update_constant("n", _context_value(new_n_value,int))).
 
 % Container for semesters
 elem(semester_container, container, w).
@@ -62,10 +63,10 @@ attr(s_modules(I), order, 2) :- semester(I).
         elem(s_module_l(I,E), label, s_module(I,E)) :- shown_module(E,I).
         attr(s_module_l(I,E), label, E) :- shown_module(E,I).
 
-        elem(s_module_b(I,E), button, s_module(I,E)) :- _clinguin_assume(in(E,s(I))), semester(I).
-        attr(s_module_b(I,E), icon, "fa-times") :- _clinguin_assume(in(E,s(I))), semester(I).
-        attr(s_module_b(I,E), class, ("btn-sm";"btn-outline")) :- _clinguin_assume(in(E,s(I))), semester(I).
-        when(s_module_b(I,E), click, call, remove_assumption(in(E,s(I)))) :- _clinguin_assume(in(E,s(I))), semester(I).
+        elem(s_module_b(I,E), button, s_module(I,E)) :- _clinguin_assume(in(E,s(I))), shown_module(E,I).
+        attr(s_module_b(I,E), icon, "fa-times") :- _clinguin_assume(in(E,s(I))), shown_module(E,I).
+        attr(s_module_b(I,E), class, ("btn-sm";"btn-outline")) :- _clinguin_assume(in(E,s(I))), shown_module(E,I).
+        when(s_module_b(I,E), click, call, remove_assumption(in(E,s(I)))) :- _clinguin_assume(in(E,s(I))), shown_module(E,I).
 
 elem(menu_bar, menu_bar, w).
 attr(menu_bar, title, "Study Regulations").

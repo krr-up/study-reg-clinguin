@@ -14,7 +14,7 @@ in(E,m) :- in(E,(b;f;a;p)).      map(s,bm1,w;s,bm2,s;s,bm3,w).
 in((im;msc),m).                  map(s,(fm1;fm2;fm3),w).
                                  map(s,(am11;am12;am21),e).
                                  map(s,(am22;am31;am32),e).
-% e                              map(s,(pm1;pm2;pm3),e).
+%* e  *%                         map(s,(pm1;pm2;pm3),e).
 in(fm1,e).                       map(s,(im1;msc1),e).
 
                                  % l and u
