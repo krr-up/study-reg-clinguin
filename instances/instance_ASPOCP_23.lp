@@ -1,4 +1,3 @@
-#const n = 4.
 
 % b, f, a, o and p               % c
 in((bm1;bm2;bm3),b).             map(c,(bm1;bm2;bm3),9).
