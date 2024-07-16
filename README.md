@@ -27,3 +27,11 @@ This function is specific to study regulation formatting. It allows users to dow
 
 ### Clinguin version
 `Clinguin 1.0.16`
+
+
+
+![](out.png)
+
+![](out2.png)
+
+![](out3.png)
