@@ -13,10 +13,31 @@ elem(w, window, root).
 attr(w, flex_direction, column).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Main container
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+elem(main_container, container, w).
+attr(main_container, order, 1).
+attr(main_container, flex_direction, row).
+attr(main_container, class, ("m-2")).
+
+attr(main_container, class, "align-self-center").
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Left main container
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+elem(left_container, container, main_container).
+attr(left_container, order, 1).
+attr(left_container, flex_direction, column).
+attr(left_container, class, ("m-2")).
+attr(left_container, child_layout, flex).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Container for 'n' value display and update button
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-elem(n_input_container, container, w).
+elem(n_input_container, container, left_container).
 attr(n_input_container, order, 4).
 attr(n_input_container, flex_direction, column).
 attr(n_input_container, class, ("m-2")).
@@ -40,7 +61,7 @@ when(n_ddi(V), click, call, update_constant("n", V)) :- values(V).
 % Container for semesters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-elem(semester_container, container, w).
+elem(semester_container, container, left_container).
 attr(semester_container, order, 2).
 attr(semester_container, flex_direction, row).
 attr(semester_container, class, "align-self-center").
@@ -63,8 +84,7 @@ attr(s_dd(I), selected, "Assign module"):-semester(I).
 attr(s_dd(I), class, ("btn-sm";"btn-outline-light"; "m-2")):-semester(I).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Updated dropdown menu item to include both module name and 
-% credits
+% Dropdown menu items
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 elem(s_ddi(I,E), dropdown_menu_item, s_dd(I)):-_any(in(E,s(I))), not _all(in(E,s(I))).
@@ -139,7 +159,7 @@ elem(menu_bar_download_asp, button, menu_bar).
 attr(menu_bar_download_asp, label, "Download ASP Model").
 attr(menu_bar_download_asp, icon, "fa-download").
 attr(menu_bar_download_asp, class, ("btn-sm";"btn-outline-secondary")).
-when(menu_bar_download_asp, click, call, download("#show in/2.","asp_study_plan.lp")).
+when(menu_bar_download_asp, click, call, download("#show in.","asp_study_plan.lp")).
 
 elem(download_modal, modal, w).
 attr(download_modal, title, "Download Study Plan").
@@ -158,7 +178,7 @@ when(download_button, click, call, custom_download(_context_value(file_name, str
 % Module Information Modal
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-elem(module_info_modal(E), modal, w) :- in(E,_).
+elem(module_info_modal(E), modal, left_container) :- in(E,_).
 attr(module_info_modal(E), title, E) :- in(E,_).
 
 elem(module_info_credits(E), label, module_info_modal(E)) :- in(E,_).
@@ -183,10 +203,99 @@ attr(s_credits_label(I), label, @concat(SC, " ECTS")) :-
 % Total Credits Display at the Top of the Page
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-elem(total_credits_container, container, w).
+elem(total_credits_container, container, left_container).
 attr(total_credits_container, order, 1).
 attr(total_credits_container, class, ("bg-secondary"; "text-white"; "p-3"; "rounded"; "m-2"; "align-self-center")).
 
 elem(total_credits_label, label, total_credits_container).
 attr(total_credits_label, label, @concat("Total credits: ", TC)) :- 
     TC = #sum{ C,E : map(c,E,C), shown_module(E,_) }.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Side right bar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+elem(right_container, container, main_container).
+attr(right_container, order, 2).
+attr(right_container, flex_direction, column).
+attr(right_container, class, ("ms-5")).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Containers for subsets of modules
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Identify all subsets
+subset(E,S) :- map(l, S, _); map(u, S, _), in(E, S).
+
+% Create containers for each subset
+elem(subset_container(S), container, right_container) :- subset(E,S).
+attr(subset_container(S), class, ("border-opacity-50";"fw-bold";"p-2";"m-2"; "rounded"; "border"; "border-secondary"; "border-2")) :- subset(E,S).
+attr(subset_container(S), flex_direction, column) :- subset(E,S).
+attr(subset_container(S), width, 300) :- subset(E,S).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Labels for subsets
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+elem(subset_l_container(S), container, subset_container(S)):-subset(E,S).
+attr(subset_l_container(S), order, 1):-subset(E,S).
+attr(subset_l_container(S), class, ("bg-secondary";"text-light";"fw-bold";"p-2";"mt-2";"mb-2";"rounded")):-subset(E,S).
+
+elem(subset_l(S), label, subset_l_container(S)):-subset(E,S).
+attr(subset_l(S), label, S):-subset(E,S).
+attr(subset_l(S), order, 1):-subset(E,S).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Display modules in subsets
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+elem(subset_module(S), container, subset_container(S)) :- subset(E,S).
+attr(subset_module(S), order, 2):- subset(E,S).
+attr(subset_module(S), class, ("d-flex"; "flex-wrap")):- subset(E,S).
+attr(subset_module(S), flex_direction, row) :- subset(E,S).
+
+% Module is visibly selected if it's shown in any semester
+module_visibly_selected(E) :- shown_module(E, I), semester(I).
+
+elem(subset_module_button(E,S), button, subset_module(S)) :- in(E,S), subset(E,S).
+attr(subset_module_button(E,S), label, E) :- in(E,S), subset(E,S).
+attr(subset_module_button(E,S), class, ("btn-sm"; "m-1")) :- in(E,S), subset(E,S).
+attr(subset_module_button(E,S), class, "btn-secondary") :- in(E,S), subset(E,S), module_visibly_selected(E).
+attr(subset_module_button(E,S), class, "btn-outline-secondary") :- in(E,S), subset(E,S), not module_visibly_selected(E).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dispay remaining sum of credits
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Calculate the total credits for visibly selected modules within each subset
+subset_total_credits(S, TotalCredits) :-
+    subset(_, S),
+    TotalCredits = #sum { C, E : module_visibly_selected(E), in(E, S), map(c, E, C) }.
+
+% Display total selected credits for each subset in the interface
+elem(subset_credits_label(S), label, subset_container(S)) :- subset(_, S).
+attr(subset_credits_label(S), label, @concat("Selected credits in ", S, ": ", TotalCredits)) :-
+    subset_total_credits(S, TotalCredits).
+attr(subset_credits_label(S), class, ("text-center"; "mt-3"; "bg-light"; "p-1"; "rounded")) :- subset(_, S).
+attr(subset_credits_label(S), order, 2) :- subset(_, S).
+
+
+% Calculate the remaining credits for each subset
+remaining_credits(S, Remaining) :-
+    map(l, S, LowerBound),
+    subset_total_credits(S, TotalCredits),
+    Remaining = LowerBound - TotalCredits.
+
+% Display remaining credits needed for each subset in the interface
+elem(subset_remaining_credits_label(S), label, subset_container(S)) :- subset(_, S).
+attr(subset_remaining_credits_label(S), label, @concat("Remaining credits needed in ", S, ": ", Remaining)) :-
+    remaining_credits(S, Remaining).
+attr(subset_remaining_credits_label(S), class, ("text-center"; "mt-3"; "bg-warning"; "p-1"; "rounded")) :- subset(_, S).
+attr(subset_remaining_credits_label(S), order, 3) :- subset(_, S).
+
+
+
+
+% all borders
+%attr(E,class,("border-1";"border";"border-dark")):- elem(E, container, _).
