@@ -3,27 +3,18 @@ Clinguin UI for Study regulations
 
 ### Usage
 
-#### cogsys.lp:
+#### Code from ASPOCP_23:
 ```
-clinguin client-server --domain-files new/instance/cogsys.lp new/encoding.lp --ui-files new/ui.lp -c n=4
+clinguin client-server --domain-files instances/instance_ASPOCP_23.lp encodings/encoding_ASPOCP_23.lp --ui-files encodings/ui.lp --custom-classes custom_backend.py --backend CustomBackend -c n=3
 ```
-#### cscbsc.lp:
-```
-clinguin client-server --domain-files new/instance/cscbsc.lp new/encoding.lp --ui-files new/ui.lp -c n=4
-```
-#### cscmsc.lp:
-```
-clinguin client-server --domain-files new/instance/cscmsc.lp new/encoding.lp --ui-files new/ui.lp -c n=4
-```
-#### dsmsc.lp:
-```
-clinguin client-server --domain-files new/instance/dsmsc.lp new/encoding.lp --ui-files new/ui.lp -c n=4
-```
-#### irsba.lp:
-```
-clinguin client-server --domain-files new/instance/irsba.lp new/encoding.lp --ui-files new/ui.lp -c n=4
-```
+
+
+## Custom Backend
+
+### custom_download(file_name)
+
+This function is specific to study regulation formatting. It allows users to download a study plan file with a specified name.
 
 
 ### Clinguin version
-`Clinguin 1.0.16`
+`Clinguin 1.0.32`
