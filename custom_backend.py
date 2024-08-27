@@ -1,11 +1,11 @@
 from collections import defaultdict
 import re
-from clinguin.server.application.backends import ClingoMultishotBackend
+from clinguin.server.application.backends import ClingoBackend
 from clingo import Control
 from typing import Tuple, Any
 
 
-class CustomBackend(ClingoMultishotBackend):
+class CustomBackend(ClingoBackend):
     def __init__(self, args: Any):
         # Parse and store constants
         self.current_constants = {
@@ -46,29 +46,6 @@ class CustomBackend(ClingoMultishotBackend):
 	# ---------------------------------------------
     # Public methods
     # ---------------------------------------------
-
-
-    def update_constant(self, name: str, value: Any) -> Tuple[bool, str]:
-        """Update a constant value and reinitialize the control if necessary."""
-        try:
-            name = name.strip('"')
-            new_value = str(value).strip('"')
-
-            if self.current_constants.get(name) != new_value:
-                self.current_constants[name] = new_value
-                self._assumptions = set()
-                self._outdate()
-                self._init_ctl()
-                self._ground()
-            return True, f"Constant {name} updated successfully to {new_value}"
-        except ValueError:
-            return (
-                False,
-                f"Error updating constant {name}: Provided value must be an integer",
-            )
-        except Exception as e:
-            return False, f"Error updating constant {name}: {str(e)}"
-
 
     def custom_download(self, file_name="study_plan.lp"):
         """
