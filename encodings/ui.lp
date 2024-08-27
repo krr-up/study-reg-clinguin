@@ -17,11 +17,15 @@ attr(w, flex_direction, column).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 elem(main_container, container, w).
+attr(main_container, class, ("d-flex"; "flex-column"; "flex-lg-row"; "justify-content-between"; "align-items-start"; "m-2"; "w-100")).
+attr(main_container, child_layout, flex).
+
+%* elem(main_container, container, w).
 attr(main_container, order, 1).
 attr(main_container, flex_direction, row).
 attr(main_container, class, ("m-2")).
 
-attr(main_container, class, "align-self-center").
+attr(main_container, class, "align-self-center"). *%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Left main container
@@ -29,9 +33,14 @@ attr(main_container, class, "align-self-center").
 
 elem(left_container, container, main_container).
 attr(left_container, order, 1).
+attr(left_container, class, ("col-12"; "col-lg-auto"; "p-3"; "bg-light"; "border"; "rounded"; "mb-3"; "mb-lg-0"; "mx-lg-auto")).
+attr(left_container, child_layout, flex).
+
+%* elem(left_container, container, main_container).
+attr(left_container, order, 1).
 attr(left_container, flex_direction, column).
 attr(left_container, class, ("m-2")).
-attr(left_container, child_layout, flex).
+attr(left_container, child_layout, flex). *%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Container for 'n' value display and update button
@@ -55,7 +64,7 @@ attr(n_dd, class, ("btn-sm"; "btn-secondary"; "p-2"; "m-2")).
 
 elem(n_ddi(V), dropdown_menu_item, n_dd) :- values(V).
 attr(n_ddi(V), label, V) :- values(V).
-when(n_ddi(V), click, call, update_constant("n", V)) :- values(V).
+when(n_ddi(V), click, call, set_constant("n", V)) :- values(V).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Container for semesters
@@ -63,12 +72,11 @@ when(n_ddi(V), click, call, update_constant("n", V)) :- values(V).
 
 elem(semester_container, container, left_container).
 attr(semester_container, order, 2).
-attr(semester_container, flex_direction, row).
-attr(semester_container, class, "align-self-center").
+attr(semester_container, class, ("d-flex"; "flex-wrap"; "flex-row"; "justify-content-center"; "align-items-start"; "w-100")).
 
 elem(s(I), container, semester_container) :- semester(I).
 attr(s(I), order, I) :- semester(I).
-attr(s(I), class, ("border-opacity-50";"fw-bold";"p-3";"m-2"; "rounded"; "border"; "border-secondary"; "border-2")):-semester(I).
+attr(s(I), class, ("border-opacity-50"; "fw-bold"; "p-3"; "m-2"; "rounded"; "border"; "border-secondary"; "border-2")) :- semester(I).
 
 elem(s_t(I), container, s(I)):-semester(I).
 attr(s_t(I), order, 1):-semester(I).
@@ -131,12 +139,6 @@ attr(menu_bar_clear, icon, "fa-trash").
 attr(menu_bar_clear, class, ("btn-sm";"btn-outline-secondary")).
 when(menu_bar_clear, click, call, clear_assumptions).
 
-elem(menu_bar_next_opt, button, menu_bar).
-attr(menu_bar_next_opt, label, "Next Optimal").
-attr(menu_bar_next_opt, icon, "fa-forward-fast").
-attr(menu_bar_next_opt, class, ("btn-sm";"btn-outline-secondary")).
-when(menu_bar_next_opt, click, callback, next_solution(optN)).
-
 elem(menu_bar_next, button, menu_bar).
 attr(menu_bar_next, label, "Next").
 attr(menu_bar_next, icon, "fa-forward-step").
@@ -175,27 +177,15 @@ attr(download_button, class, ("btn-primary", "mt-3")).
 when(download_button, click, call, custom_download(_context_value(file_name, str, "semester_assignments.txt"))).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Module Information Modal
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-elem(module_info_modal(E), modal, left_container) :- in(E,_).
-attr(module_info_modal(E), title, E) :- in(E,_).
-
-elem(module_info_credits(E), label, module_info_modal(E)) :- in(E,_).
-attr(module_info_credits(E), label, @concat("Credits: ", C)) :- map(c,E,C).
-
-when(s_module_l(I,E), click, update, (module_info_modal(E), visible, shown)) :- shown_module(E,I).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Credits Display Under Each Semester
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 elem(s_credits(I), container, s(I)) :- semester(I).
 attr(s_credits(I), order, 3) :- semester(I).
-attr(s_credits(I), class, ("bg-light"; "p-2"; "mt-2"; "rounded"; "text-center"; "fw-bold")) :- semester(I).
+attr(s_credits(I), class, ("bg-light"; "p-2"; "mt-2"; "rounded"; "text-center"; "fw-bold"; "mt-auto")) :- semester(I).
 
 elem(s_credits_label(I), label, s_credits(I)) :- semester(I).
-attr(s_credits_label(I), label, @concat(SC, " ECTS")) :- 
+attr(s_credits_label(I), label, @concat(SC, " ECTS")) :-
     semester(I),
     SC = #sum{ C,E : map(c,E,C), shown_module(E,I) }.
 
@@ -208,17 +198,22 @@ attr(total_credits_container, order, 1).
 attr(total_credits_container, class, ("bg-secondary"; "text-white"; "p-3"; "rounded"; "m-2"; "align-self-center")).
 
 elem(total_credits_label, label, total_credits_container).
-attr(total_credits_label, label, @concat("Total credits: ", TC)) :- 
+attr(total_credits_label, label, @concat("Total credits: ", TC)) :-
     TC = #sum{ C,E : map(c,E,C), shown_module(E,_) }.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Side right bar
+% Right main container
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 elem(right_container, container, main_container).
 attr(right_container, order, 2).
+attr(right_container, class, ("col-12"; "col-lg-auto"; "ml-lg-auto"; "p-3"; "border"; "rounded"; "w-auto"; "d-flex"; "flex-row"; "flex-wrap"; "flex-lg-column")).
+attr(right_container, child_layout, flex).
+
+%* elem(right_container, container, main_container).
+attr(right_container, order, 2).
 attr(right_container, flex_direction, column).
-attr(right_container, class, ("ms-5")).
+attr(right_container, class, ("ms-5")). *%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Containers for subsets of modules
@@ -229,9 +224,10 @@ subset(E,S) :- map(l, S, _); map(u, S, _), in(E, S).
 
 % Create containers for each subset
 elem(subset_container(S), container, right_container) :- subset(E,S).
-attr(subset_container(S), class, ("border-opacity-50";"fw-bold";"p-2";"m-2"; "rounded"; "border"; "border-secondary"; "border-2")) :- subset(E,S).
+attr(subset_container(S), class, ("border-opacity-50";"fw-bold";"p-2";"m-2"; "rounded"; "border"; "border-secondary"; "border-2"; "col-12"; "col-sm-6"; "col-md-4"; "col-lg-3"; "d-flex"; "flex-column")) :- subset(E,S).
 attr(subset_container(S), flex_direction, column) :- subset(E,S).
 attr(subset_container(S), width, 300) :- subset(E,S).
+attr(subset_container(S), order, 2) :- subset(E,S).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -252,7 +248,7 @@ attr(subset_l(S), order, 1):-subset(E,S).
 
 elem(subset_module(S), container, subset_container(S)) :- subset(E,S).
 attr(subset_module(S), order, 2):- subset(E,S).
-attr(subset_module(S), class, ("d-flex"; "flex-wrap")):- subset(E,S).
+attr(subset_module(S), class, ("d-flex"; "flex-wrap"; "pt-2")):- subset(E,S).
 attr(subset_module(S), flex_direction, row) :- subset(E,S).
 
 % Module is visibly selected if it's shown in any semester
@@ -260,12 +256,13 @@ module_visibly_selected(E) :- shown_module(E, I), semester(I).
 
 elem(subset_module_button(E,S), button, subset_module(S)) :- in(E,S), subset(E,S).
 attr(subset_module_button(E,S), label, E) :- in(E,S), subset(E,S).
-attr(subset_module_button(E,S), class, ("btn-sm"; "m-1")) :- in(E,S), subset(E,S).
+attr(subset_module_button(E,S), class, ("btn-sm"; "m-1"; "disabled")) :- in(E,S), subset(E,S).
 attr(subset_module_button(E,S), class, "btn-secondary") :- in(E,S), subset(E,S), module_visibly_selected(E).
 attr(subset_module_button(E,S), class, "btn-outline-secondary") :- in(E,S), subset(E,S), not module_visibly_selected(E).
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Dispay remaining sum of credits
+% Display progress bar for credits in each subset
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Calculate the total credits for visibly selected modules within each subset
@@ -273,29 +270,36 @@ subset_total_credits(S, TotalCredits) :-
     subset(_, S),
     TotalCredits = #sum { C, E : module_visibly_selected(E), in(E, S), map(c, E, C) }.
 
-% Display total selected credits for each subset in the interface
-elem(subset_credits_label(S), label, subset_container(S)) :- subset(_, S).
-attr(subset_credits_label(S), label, @concat("Selected credits in ", S, ": ", TotalCredits)) :-
-    subset_total_credits(S, TotalCredits).
-attr(subset_credits_label(S), class, ("text-center"; "mt-3"; "bg-light"; "p-1"; "rounded")) :- subset(_, S).
-attr(subset_credits_label(S), order, 2) :- subset(_, S).
-
-
 % Calculate the remaining credits for each subset
-remaining_credits(S, Remaining) :-
+remaining_credits(S, Remaining, TotalCredits) :-
     map(l, S, LowerBound),
     subset_total_credits(S, TotalCredits),
     Remaining = LowerBound - TotalCredits.
 
-% Display remaining credits needed for each subset in the interface
-elem(subset_remaining_credits_label(S), label, subset_container(S)) :- subset(_, S).
-attr(subset_remaining_credits_label(S), label, @concat("Remaining credits needed in ", S, ": ", Remaining)) :-
-    remaining_credits(S, Remaining).
-attr(subset_remaining_credits_label(S), class, ("text-center"; "mt-3"; "bg-warning"; "p-1"; "rounded")) :- subset(_, S).
-attr(subset_remaining_credits_label(S), order, 3) :- subset(_, S).
+% Calculate the percentage of credits completed for each subset
+progress_percentage(S, Percentage) :-
+    map(l, S, LowerBound),
+    subset_total_credits(S, TotalCredits),
+    LowerBound > 0,
+    Percentage = (TotalCredits * 100) / LowerBound.
+
+elem(progress_bar_container(S), container, subset_container(S)) :- subset(_, S).
+attr(progress_bar_container(S), order, 4) :- subset(_, S).
+attr(progress_bar_container(S), class, ("m-1"; "pt-3"; "mt-auto")) :- subset(_, S).
 
 
-
+% Display the progress bar showing percentage of completed credits
+elem(subset_progress_bar(S), progress_bar, progress_bar_container(S)) :- subset(_, S).
+attr(subset_progress_bar(S), value, P) :- progress_percentage(S, P).
+attr(subset_progress_bar(S), class, ("progress-bar-striped"; "progress-bar-animated"; "rounded")) :- subset(_, S).
+attr(subset_progress_bar(S), out_label, @concat(Remaining, " ECTS")) :-
+    remaining_credits(S, Remaining, _), Remaining>0.
+attr(subset_progress_bar(S), label, @concat(TotalCredits, " ECTS")) :-
+    remaining_credits(S, _, TotalCredits).
+attr(subset_progress_bar(S), height, 30) :- progress_percentage(S, P).
+attr(subset_progress_bar(S), class, "bg-success") :- progress_percentage(S, P), P >= 100.
+attr(subset_progress_bar(S), class, "bg-warning") :- progress_percentage(S, P), P >= 50, P < 100.
+attr(subset_progress_bar(S), class, "bg-danger") :- progress_percentage(S, P), P < 50.
 
 % all borders
 %attr(E,class,("border-1";"border";"border-dark")):- elem(E, container, _).
