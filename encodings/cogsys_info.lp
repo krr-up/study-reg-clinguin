@@ -1,8 +1,50 @@
-% program({program_abbr},"{details["program_full_name"]}",{program_degree},{program_code},{program_version}).
-% module_program({module["id"]},"{module["title"]}",{module["abbreviation"]},{module["credits"]},{program_abbr}).
-% examination({exam["id"]},"{exam["form"]}","{exam["title"]}",{exam["type"]},{exam["module_abbreviation"]},{program_abbr}).
+% This instance models the structure of the study program "Cognitive Systems: Language, Learning and Reasoning (COG)".
+% It defines the program, the modules offered, and the corresponding examinations for each module.
 
-program("COG","Cognitive Systems: Language, Learning and Reasoning","MS","H","20142").
+% The `program/4` predicate defines the overall study program, consisting of:
+% - The program abbreviation (e.g., "COG").
+% - The full title of the program (e.g., "Cognitive Systems: Language, Learning and Reasoning").
+% - The degree offered (e.g., "MS" for Master of Science).
+% - The version of the program (e.g., "20142").
+
+% The `module_program/5` predicate defines the modules within the program, consisting of:
+% - A module ID (e.g., "55580").
+% - The full title of the module (e.g., "Machine Learning and Data Analysis").
+% - The module abbreviation (e.g., "bm2").
+% - The number of credits for the module (e.g., "9").
+% - The program the module belongs to (e.g., "COG").
+
+% The `examination/6` predicate defines the examination tasks for each module, consisting of:
+% - An exam ID (e.g., "555802").
+% - The form of the examination (e.g., "MP" for oral examination).
+% - The title of the examination (e.g., "Mündliche Prüfung").
+% - The examination type (e.g., "PL" for graded exams, "SL" for ungraded performance or ).
+% - The module the exam is part of (e.g., "bm2").
+% - The study program it is part of (e.g., "COG").
+
+% Degrees:
+% - B2: Zwei-Fach-Bachelor (Two-subject Bachelor)
+% - BA: Bachelor of Arts
+% - BL: Bachelor of Education
+% - ML: Master of Education
+% - MT: Master of Arts
+
+% Examination types:
+% - PL: primary examination
+% - PNL: secondary examination
+% - SL: Studienleistung (an ungraded academic achievement that is not required for module completion, with no prerequisite checks)
+
+% Examination forms:
+% MP: Mündliche Prüfung (Oral Exam)
+% V: Vorlesung (Lecture)
+% U: Übung (Exercise)
+% PR: Praktisches Arbeiten (Practical Work)
+% PJ: Projekt (Project)
+% V1: Vorlesung oder Seminar (Lecture or Seminar)
+% S: Seminar (Seminar)
+
+
+program("COG","Cognitive Systems: Language, Learning and Reasoning","MS","20142").
 module_program("55580","Machine Learning and Data Analysis",bm2,9,"COG").
 examination("555802","MP","Mündliche Prüfung","PL",bm2,"COG").
 examination("555812","V","Intelligent Data Analysis","SL",bm2,"COG").
