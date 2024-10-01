@@ -8,6 +8,10 @@ semester(I) :- _clinguin_const(n,N), I = 1..N.
 % Define possible values for the number of semesters
 values(3..8).
 
+% Determine the season for each semester
+semester_season(I, "<i class='fa fa-snowflake'></i>") :- semester(I), empty(int(m(s), s(I))).
+semester_season(I, "<i class='fa fa-sun'></i>") :- semester(I), empty(int(m(w), s(I))).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Root Window Configuration
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -84,7 +88,7 @@ attr(center_section, child_layout, flex).
 
     % Label for each semester header
     elem(semester_label(I), label, semester_header_container(I)) :- semester(I).
-    attr(semester_label(I), label, @concat("Semester ",I)) :- semester(I).
+    attr(semester_label(I), label, @concat(Season, " Semester ",I)) :- semester(I), semester_season(I, Season).
     attr(semester_label(I), order, 1) :- semester(I).
 
     % Dropdown menu for assigning modules to a semester
@@ -113,25 +117,36 @@ attr(center_section, child_layout, flex).
 
     % Define when a module should be shown within a semester
     shown_module(E,I) :- _all(in(E,s(I))).
-    shown_module(E,I) :- in(E,s(I)), _clinguin_browsing.
+    shown_module(E,I) :- _clinguin_assume(in(E,s(I)), true), _clinguin_browsing.
 
     % Container for each module displayed within a semester
     elem(displayed_module(I,E), container, semester_modules_container(I)) :- shown_module(E,I).
-    attr(displayed_module(I,E), height, C*10) :- shown_module(E,I), map(c,E,C).
-    attr(displayed_module(I,E), class, ("border"; "border-secondary";
+    attr(displayed_module(I,E), height, C*12) :- shown_module(E,I), map(c,E,C).
+	attr(displayed_module(I,E), width, 200) :- shown_module(E,I).
+	attr(displayed_module(I,E), class, ("border"; "border-secondary";
                                         "d-flex";"flex-row";"justify-content-between";"align-items-center";
                                         "p-3";"m-2"; "rounded"; "border-2"; "border-opacity-50"; "bg-white")) :- shown_module(E,I).
+	% class for inferred modules
+	attr(displayed_module(I,E), class, "border-info") :- _all(in(E,s(I))), not _clinguin_assume(in(E,s(I)), true).
+
+	elem(displayed_module_l(I,E), container, displayed_module(I,E)) :- shown_module(E,I).
+    attr(displayed_module_l(I,E), class, "text-wrap") :- shown_module(E,I).
+	attr(displayed_module_l(I,E), fontSize, ("12px")) :- shown_module(E,I).
+	
+	elem(displayed_module_b(I,E), container, displayed_module(I,E)) :- shown_module(E,I).
+	attr(displayed_module_b(I,E), class, ("align-items-end"; "ms-auto")) :- shown_module(E,I).
 
     % Label for each displayed module
-    elem(module_label(I,E), label, displayed_module(I,E)) :- shown_module(E,I).
-    attr(module_label(I,E), label, E) :- shown_module(E,I).
-    attr(module_label(I,E), class, ("text-black"; "fw-bold")) :- shown_module(E,I).
+    elem(module_label(I,E), label, displayed_module_l(I,E)) :- shown_module(E,I).
+    attr(module_label(I,E), label, @concat(E,": ",EN)) :- shown_module(E,I), module_program(_, EN, E, _, _).
+    attr(module_label(I,E), class, ("text-black")) :- _clinguin_assume(in(E,s(I)), true).
+	attr(module_label(I,E), class, ("text-muted")) :- _all(in(E,s(I))), not _clinguin_assume(in(E,s(I)), true).
 	when(module_label(I,E), click, update, (module_info_modal(E), visibility, shown)) :- shown_module(E,I).
 
     % Button for removing a module from a semester
-    elem(remove_module_button(I,E), button, displayed_module(I,E)) :- _clinguin_assume(in(E,s(I)), true).
-    attr(remove_module_button(I,E), icon, "fa-times") :- _clinguin_assume(in(E,s(I)), true).
-    attr(remove_module_button(I,E), class, ("btn-sm";"btn-outline")) :- _clinguin_assume(in(E,s(I)), true).
+    elem(remove_module_button(I,E), button, displayed_module_b(I,E)) :- _clinguin_assume(in(E,s(I)), true).
+	attr(remove_module_button(I,E), icon, "fa-times") :- _clinguin_assume(in(E,s(I)), true).
+	attr(remove_module_button(I,E), class, ("p-2"; "ms-auto"; "border-0"; "bg-transparent"; "text-secondary"; "small")) :- _clinguin_assume(in(E,s(I)), true).
     when(remove_module_button(I,E), click, call, remove_assumption(in(E,s(I)))) :- _clinguin_assume(in(E,s(I)), true).
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -265,23 +280,68 @@ attr(right_section, child_layout, flex).
 % Modals with module info
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Modal for displaying module information
 elem(module_info_modal(E), modal, root_window) :- in(E,_).
-attr(module_info_modal(E), title, @concat(ENr, " - ", EN)) :- in(E,_), module_program(ENr, EN, E, _, _).
+attr(module_info_modal(E), title, @concat(E, ": ", EN)) :- in(E,_), module_program(_, EN, E, _, _).
 
-	elem(module_info_container(E), container, module_info_modal(E)) :- in(E,_).
-	attr(module_info_container(E), child_layout, flex) :- in(E,_).
-    attr(module_info_container(E), flex_direction, row_reverse) :- in(E,_).
-    %attr(module_info_container(E), class, "align-items-center") :- in(E,_).
-		
-		elem(module_info_text(E), label, module_info_container(E)) :- 
-			in(E,_).
-		attr(module_info_text(E), label, @concat(
-			"<b>Study Program:</b> ", PN,
-			"<br><b>Credits:</b> ", C
-		)):- 
-			program(P, PN, _, _, _), 
-			in(E,_),
-			module_program(_, _, E, C, P).
+% Container for the modal content
+elem(module_info_container(E), container, module_info_modal(E)) :- in(E,_).
+attr(module_info_container(E), child_layout, flex) :- in(E,_).
+attr(module_info_container(E), flex_direction, column) :- in(E,_).
+attr(module_info_container(E), class, ("justify-content-start"; "align-items-start")) :- in(E,_).
+
+% Container for the module info text
+elem(module_info_text_container(E), container, module_info_container(E)) :- in(E, m).
+attr(module_info_text_container(E), order, 1) :- in(E, m).
+attr(module_info_text_container(E), class, ("mt-1"; "d-flex"; "flex-row"; "justify-content-center")) :- in(E, m).
+
+% Module info text (details like semester, program, credits, etc.)
+elem(module_info_text(E), label, module_info_text_container(E)) :- in(E,_).
+attr(module_info_text(E), label, @concat(
+    Season, "<b> Semester:</b> ", I,
+    "<br><b>Study Program:</b> ", PN,
+    "<br><b>Credits:</b> ", C
+)) :- 
+    in(E,s(I)),
+    module_program(_, _, E, C, P),
+    program(P, PN, _, _),
+    semester_season(I, Season).
+
+% Container for the reassignment controls
+elem(module_reassign_container(E), container, module_info_container(E)) :- in(E, m).
+attr(module_reassign_container(E), order, 2) :- in(E, m).
+attr(module_reassign_container(E), class, ("mt-3"; "d-flex"; "flex-row"; "justify-content-center")) :- in(E, m).
+
+% Dropdown menu for reassignment to another semester
+elem(module_reassign_dropdown(E), dropdown_menu, module_reassign_container(E)) :- in(E, m).
+attr(module_reassign_dropdown(E), selected, "Reassign to Semester") :- in(E, m).
+attr(module_reassign_dropdown(E), class, ("btn-sm";"btn-outline-secondary"; "text-black")) :- in(E, m).
+
+% Dropdown menu options for each available semester
+elem(module_reassign_option(E,I), dropdown_menu_item, module_reassign_dropdown(E)) :- in(E, m), semester(I).
+attr(module_reassign_option(E,I), label, @concat("Semester ", I)) :- in(E, m), semester(I).
+
+% Make the current semester clickable and green for selected modules
+attr(module_reassign_option(E,I), class, ("text-success"; "fw-bold")) :-
+    in(E,_), semester(I), _clinguin_assume(in(E,s(I)), true).
+when(module_reassign_option(E,I), click, call, (remove_assumption(in(E,s(I))), update)) :-
+    in(E, m), _clinguin_assume(in(E,s(I)), true).
+
+% Disable all other semesters when module is selected
+attr(module_reassign_option(E,I), class, "disabled") :-
+    in(E,_), semester(I), not _clinguin_assume(in(E,s(I)), true), _clinguin_assume(in(E,s(_)), true).
+
+% After assumption is removed, enable semesters that satisfy _any(assignable(s(I)))
+attr(module_reassign_option(E,I), class, ("text-primary"; "fw-bold")) :-
+    in(E,_), semester(I), not _clinguin_assume(in(E,s(_)), true), _any(assignable(s(I))).
+
+% Disable semesters that do not satisfy _any(assignable(s(I))) after removal
+attr(module_reassign_option(E,I), class, "disabled") :-
+    in(E,_), semester(I), not _clinguin_assume(in(E,s(_)), true), not _any(assignable(s(I))).
+
+% Action to add assumption for reassignment to a new semester after removal
+when(module_reassign_option(E,I), click, call, (add_assumption(in(E,s(I))), update)) :-
+    in(E, m), semester(I), not _clinguin_assume(in(E,s(_)), true), _any(assignable(s(I))).
 
 		
 % program("{program_abbr}","{details["program_full_name"]}","{program_degree}","{program_code}","{program_version}").
