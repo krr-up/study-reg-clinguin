@@ -132,7 +132,7 @@ attr(center_section, child_layout, flex).
 	elem(displayed_module_l(I,E), container, displayed_module(I,E)) :- shown_module(E,I).
     attr(displayed_module_l(I,E), class, "text-wrap") :- shown_module(E,I).
 	attr(displayed_module_l(I,E), fontSize, ("12px")) :- shown_module(E,I).
-	
+
 	elem(displayed_module_b(I,E), container, displayed_module(I,E)) :- shown_module(E,I).
 	attr(displayed_module_b(I,E), class, ("align-items-end"; "ms-auto")) :- shown_module(E,I).
 
@@ -232,9 +232,10 @@ attr(right_section, child_layout, flex).
 	% Button for each module in a subset
 	elem(subset_module_button(E,S), button, subset_modules_container(S)) :- in(E,S), subset(E,S).
 	attr(subset_module_button(E,S), label, E) :- in(E,S), subset(E,S).
-	attr(subset_module_button(E,S), class, ("btn-sm"; "m-1"; "disabled")) :- in(E,S), subset(E,S).
+	attr(subset_module_button(E,S), class, ("btn-sm"; "m-1")) :- in(E,S), subset(E,S).
 	attr(subset_module_button(E,S), class, "btn-secondary") :- in(E,S), subset(E,S), module_visibly_selected(E).
 	attr(subset_module_button(E,S), class, "btn-outline-secondary") :- in(E,S), subset(E,S), not module_visibly_selected(E).
+	when(subset_module_button(E,S), click, update, (module_info_modal(E), visibility, shown)) :- in(E,S), subset(E,S), not module_visibly_selected(E).
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% Display Progress Bars for Credits in Each Subset
@@ -283,6 +284,7 @@ attr(right_section, child_layout, flex).
 % Modal for displaying module information
 elem(module_info_modal(E), modal, root_window) :- in(E,_).
 attr(module_info_modal(E), title, @concat(E, ": ", EN)) :- in(E,_), module_program(_, EN, E, _, _).
+attr(module_info_modal(E), size, "lg") :- in(E,_), module_program(_, EN, E, _, _).
 
 % Container for the modal content
 elem(module_info_container(E), container, module_info_modal(E)) :- in(E,_).
@@ -301,7 +303,7 @@ attr(module_info_text(E), label, @concat(
     Season, "<b> Semester:</b> ", I,
     "<br><b>Study Program:</b> ", PN,
     "<br><b>Credits:</b> ", C
-)) :- 
+)) :-
     in(E,s(I)),
     module_program(_, _, E, C, P),
     program(P, PN, _, _),
@@ -343,7 +345,7 @@ attr(module_reassign_option(E,I), class, "disabled") :-
 when(module_reassign_option(E,I), click, call, (add_assumption(in(E,s(I))), update)) :-
     in(E, m), semester(I), not _clinguin_assume(in(E,s(_)), true), _any(assignable(s(I))).
 
-		
+
 % program("{program_abbr}","{details["program_full_name"]}","{program_degree}","{program_code}","{program_version}").
 % module_program("{module["id"]}","{module["title"]}","{module["abbreviation"]}","{module["credits"]}","{program_abbr}").
 
