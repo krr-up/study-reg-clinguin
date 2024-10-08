@@ -12,6 +12,8 @@ values(3..8).
 semester_season(I, "<i class='fa fa-snowflake'></i>") :- semester(I), empty(int(m(s), s(I))).
 semester_season(I, "<i class='fa fa-sun'></i>") :- semester(I), empty(int(m(w), s(I))).
 
+when(root_window, load, update, (module_info_modal(E), visibility, shown)) :- _clinguin_context(modal_opened,E).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Root Window Configuration
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -79,12 +81,14 @@ attr(center_section, child_layout, flex).
     % Individual semester containers
     elem(semester_container(I), container, semester_display_container) :- semester(I).
     attr(semester_container(I), order, I) :- semester(I).
-    attr(semester_container(I), class, ("border-opacity-50"; "fw-bold"; "p-3"; "m-2"; "rounded"; "border"; "border-secondary"; "border-2"; "bg-light")) :- semester(I).
+    attr(semester_container(I), class, ("border-opacity-50"; "fw-bold"; "p-3"; "m-2"; "rounded"; "border"; "border-2"; "bg-light")) :- semester(I).
+    attr(semester_container(I), class, ("border-warning")) :- semester(I), empty(int(m(s), s(I))).
+    attr(semester_container(I), class, ("border-primary")) :- semester(I), empty(int(m(w), s(I))).
 
     % Header for each semester
     elem(semester_header_container(I), container, semester_container(I)) :- semester(I).
     attr(semester_header_container(I), order, 1) :- semester(I).
-    attr(semester_header_container(I), class, ("bg-secondary";"text-light";"fw-bold";"p-2";"m-1"; "rounded")) :- semester(I).
+    attr(semester_header_container(I), class, ("text-dark";"fw-bold";"p-2";"m-1"; "rounded")) :- semester(I).
 
     % Label for semester headers
     elem(semester_label(I), label, semester_header_container(I)) :- semester(I).
@@ -95,21 +99,33 @@ attr(center_section, child_layout, flex).
     elem(assign_module_dropdown(I), dropdown_menu, semester_header_container(I)) :- semester(I).
     attr(assign_module_dropdown(I), order, 2) :- semester(I).
     attr(assign_module_dropdown(I), selected, "Assign module") :- semester(I).
-    attr(assign_module_dropdown(I), class, ("btn-sm";"btn-outline-light"; "m-2")) :- semester(I).
+    attr(assign_module_dropdown(I), class, ("btn-sm";"btn-outline-dark"; "m-2")) :- semester(I).
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Dropdown Menu Items for Module Assignment
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     % Dropdown menu items to assign modules
-    elem(assign_module_option(I,E), dropdown_menu_item, assign_module_dropdown(I)) :- _any(in(E,s(I))), not _all(in(E,s(I))).
-    attr(assign_module_option(I,E), label, @concat(E, " (", C, " ECTS)")) :- _any(in(E,s(I))), not _all(in(E,s(I))), map(c, E, C).
-    when(assign_module_option(I,E), click, call, add_assumption(in(E,s(I)))) :- _any(in(E,s(I))), not _all(in(E,s(I))).
+    module_addable_to_semester(E,I) :- in(E,_),semester(I), not _all(in(E,s(I))).
+    elem(assign_module_option(I,E), dropdown_menu_item, assign_module_dropdown(I)) :- module_addable_to_semester(E, I).
+    attr(assign_module_option(I,E), label, @concat(E, " (", C, " ECTS)")) :- module_addable_to_semester(E, I), map(c, E, C).
+    attr(assign_module_option(I,E), class, "disabled") :- module_addable_to_semester(E,I), not _any(in(E,s(I))).
+    attr(assign_module_option(I,E), class, "opacity-50") :- module_addable_to_semester(E,I), not _any(in(E,s(I))).
+
+    attr(assign_module_option(I,E), class, "text-success") :- module_addable_to_semester(E, I), user_preference(include(_),E).
+    attr(assign_module_option(I,E), class, "text-danger") :- module_addable_to_semester(E, I), user_preference(exclude(_),E).
+    attr(assign_module_option(I,E), icon, ("fa-solid";"fa-thumbs-up")) :- module_addable_to_semester(E, I), user_preference(include(hard),E).
+    attr(assign_module_option(I,E), icon, ("fa-regular";"fa-thumbs-up")) :- module_addable_to_semester(E, I), user_preference(include(soft),E).
+    attr(assign_module_option(I,E), icon, ("fa-regular";"fa-thumbs-down")) :- module_addable_to_semester(E, I), user_preference(exclude(soft),E).
+    attr(assign_module_option(I,E), icon, ("fa-solif";"fa-thumbs-down")) :- module_addable_to_semester(E, I), user_preference(exclude(hard),E).
+
+    when(assign_module_option(I,E), click, call, add_assumption(in(E,s(I)))) :- module_addable_to_semester(E, I).
 
     % Container for modules in each semester
     elem(semester_modules_container(I), container, semester_container(I)) :- semester(I).
     attr(semester_modules_container(I), class, ("bg-wight")) :- semester(I).
     attr(semester_modules_container(I), order, 2) :- semester(I).
+
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Module Display within Semesters
@@ -332,7 +348,7 @@ attr(module_info_modal(E), size, "lg") :- in(E,_), module_program(_, EN, E, _, _
 					elem(program_label(E), label, program_info(E)) :- module_program(_, _, E, _, P), program(P, PN, D, V).
 					attr(program_label(E), label, @concat("<div class='mb-2'><strong>Program:</strong> ", PN, " (", P, ")</div>",
 														"<div class='mb-2'><strong>Degree:</strong> ", D, "</div>",
-														"<div><strong>Version:</strong> ", V, "</div>")) :- 
+														"<div><strong>Version:</strong> ", V, "</div>")) :-
 						module_program(_, _, E, _, P), program(P, PN, D, V).
 
 				% Credits
@@ -349,7 +365,7 @@ attr(module_info_modal(E), size, "lg") :- in(E,_), module_program(_, EN, E, _, _
 				attr(semester_info(E), order, 4) :- in(E, s(_)).
 
 					elem(semester_label(E), label, semester_info(E)) :- in(E, s(I)), semester_season(I, Season).
-					attr(semester_label(E), label, @concat("<strong>Assigned to:</strong> ", Season, " Semester ", I)) :- 
+					attr(semester_label(E), label, @concat("<strong>Assigned to:</strong> ", Season, " Semester ", I)) :-
 						in(E, s(I)), semester_season(I, Season).
 
 			% Right column: Examinations (only if examinations exist)
@@ -373,7 +389,7 @@ attr(module_info_modal(E), size, "lg") :- in(E,_), module_program(_, EN, E, _, _
 
 					% Individual examination items
 					elem(exam_item(E, ExamID), container, exam_list(E)) :- examination(ExamID, Form, Title, Type, E, _).
-					attr(exam_item(E, ExamID), class, ("list-group-item"; "d-flex"; "justify-content-between"; "align-items-center"; "py-3")) :- 
+					attr(exam_item(E, ExamID), class, ("list-group-item"; "d-flex"; "justify-content-between"; "align-items-center"; "py-3")) :-
 						examination(ExamID, _, _, _, E, _).
 					attr(exam_item(E, ExamID), order, ExamID) :- examination(ExamID, _, _, _, E, _).
 
@@ -393,9 +409,31 @@ attr(module_info_modal(E), size, "lg") :- in(E,_), module_program(_, EN, E, _, _
 						attr(exam_type(E, ExamID), order, 2) :- examination(ExamID, _, _, _, E, _).
 
 			% Action section
-			elem(action_section(E), container, module_info_container(E)) :- in(E,_).
-			attr(action_section(E), class, ("mt-4"; "pt-3"; "border-top")) :- in(E,_).
-			attr(action_section(E), order, 3) :- in(E,_).
+            elem(bottom_section(E), container, module_info_container(E)) :- in(E,_).
+			attr(bottom_section(E), class, ("mt-4"; "pt-3";"d-flex";"flex-column")) :- in(E,_).
+			attr(bottom_section(E), order, 3) :- in(E,_).
+
+                elem(action_section(E), container, bottom_section(E)) :- in(E,_).
+                attr(action_section(E), class, ("mt-4"; "pt-3";"d-flex";"flex-row";"justify-content-between")) :- in(E,_).
+                attr(action_section(E), order, 1) :- in(E,_).
+
+                %Preference container
+				elem(pref_container(E), container, action_section(E)) :- in(E,_),use_preferences.
+				attr(pref_container(E), class, ("d-flex";"flex-column")) :- in(E,_),use_preferences.
+
+				elem(pref_container(E,P), checkbox, pref_container(E)) :- in(E,_), preference(P,M).
+				attr(pref_container(E,P), label, M) :- in(E,_), preference(P,M).
+				attr(pref_container(E,P), checked, true) :- in(E,_), user_preference(P,E).
+				when(pref_container(E,P), click, call, set_external(user_preference(P,E),false)) :- in(E,_), preference(P,M), user_preference(P,E).
+				when(pref_container(E,P), click, call, set_external(user_preference(P,E),true)) :- in(E,_), preference(P,M), not user_preference(P,E).
+				when(pref_container(E,P), click, context, (modal_opened,E)) :- in(E,_), preference(P,M).
+
+				attr(pref_container(E,P), disabled, true) :- in(E,_), user_preference(P',E), preference(P,_), P'!=P.
+				attr(pref_container(E,include(hard;soft)), disabled, true) :- in(E,_), not _any(in(E,s(_))),use_preferences.
+				attr(pref_container(E,exclude(hard;soft)), disabled, true) :- in(E,_), _all(in(E,s(_))),use_preferences.
+
+
+
 
 				% Button container
 				elem(button_container(E), container, action_section(E)) :- in(E,_).
@@ -408,17 +446,17 @@ attr(module_info_modal(E), size, "lg") :- in(E,_), module_program(_, EN, E, _, _
 					attr(assign_semester_dropdown(E), class, ("btn"; "btn-outline-primary")) :- not _all(in(E, s(_))), module_program(_, _, E, _, _).
 
 						% Dropdown options to assign a module to a semester
-						elem(assign_semester_option(E, I), dropdown_menu_item, assign_semester_dropdown(E)) :- 
+						elem(assign_semester_option(E, I), dropdown_menu_item, assign_semester_dropdown(E)) :-
 							module_program(_, _, E, _, _), semester(I), not _all(in(E, s(_))).
-						attr(assign_semester_option(E, I), label, @concat("Semester ", I)) :- 
+						attr(assign_semester_option(E, I), label, @concat("Semester ", I)) :-
 							module_program(_, _, E, _, _), semester(I), not _all(in(E, s(_))).
-						attr(assign_semester_option(E, I), class, "text-success") :- 
+						attr(assign_semester_option(E, I), class, "text-success") :-
 							module_program(_, _, E, _, _), semester(I), _any_opt(in(E, s(I))).
-						attr(assign_semester_option(E, I), class, "text-warning") :- 
+						attr(assign_semester_option(E, I), class, "text-warning") :-
 							module_program(_, _, E, _, _), semester(I), _any(in(E, s(I))), not _any_opt(in(E, s(I))).
-						attr(assign_semester_option(E, I), class, ("text-muted"; "disabled")) :- 
+						attr(assign_semester_option(E, I), class, ("text-muted"; "disabled")) :-
 							module_program(_, _, E, _, _), semester(I), not _any(in(E, s(I))).
-						attr(assign_semester_option(E, I), order, I) :- 
+						attr(assign_semester_option(E, I), order, I) :-
 							module_program(_, _, E, _, _), semester(I), not _all(in(E, s(_))).
 						when(assign_semester_option(E, I), click, call, add_assumption(in(E, s(I)))) :-
 							module_program(_, _, E, _, _), semester(I), _any(in(E, s(I))), not _all(in(E, s(_))).
@@ -431,8 +469,8 @@ attr(module_info_modal(E), size, "lg") :- in(E,_), module_program(_, EN, E, _, _
 					when(unassign_module_button(E), click, call, remove_assumption(in(E, s(I)))) :- _clinguin_assume(in(E, s(I)), true).
 
 				% Examination Legend
-				elem(exam_legend(E), container, action_section(E)) :- in(E,_).
-				attr(exam_legend(E), class, ("mt-3"; "p-3"; "bg-light"; "rounded"; "border")) :- in(E,_).
+				elem(exam_legend(E), container, bottom_section(E)) :- in(E,_).
+				attr(exam_legend(E), class, ("mt-3"; "p-3"; "border-top"; "bg-light")) :- in(E,_).
 				attr(exam_legend(E), order, 2) :- in(E,_).
 
 					% Header
@@ -497,7 +535,7 @@ elem(menu_bar_next, button, menu_bar).
 attr(menu_bar_next, label, "Next").
 attr(menu_bar_next, icon, "fa-forward-step").
 attr(menu_bar_next, class, ("btn-sm"; "btn-outline-secondary")).
-when(menu_bar_next, click, call, next_solution).
+when(menu_bar_next, click, call, next_solution(optN)).
 
 % Button to select the current solution
 elem(menu_bar_select, button, menu_bar).
