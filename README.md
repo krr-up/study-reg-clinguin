@@ -18,7 +18,7 @@
 
 3. **Run the Clinguin server:**
 	```bash
-	clinguin client-server --domain-files instances/cogsys.lp encodings/meta.lp encodings/cogsys_info.lp encodings/preference.lp --ui-files encodings/ui_main.lp -c n=3
+	clinguin client-server --domain-files instances/cogsys.lp encodings/meta.lp encodings/cogsys_info.lp encodings/preference.lp --ui-files ui/ui_main.lp -c n=3
 	```
 
 ### Clinguin Version

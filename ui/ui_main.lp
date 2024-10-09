@@ -26,4 +26,4 @@
 elem(root_window, window, root).
 attr(root_window, flex_direction, column).
 
-when(root_window, load, update, (module_info_modal(E), visibility, shown)) :- _clinguin_context(modal_opened,E).
+%when(root_window, load, update, (module_info_modal(E), visibility, shown)) :- _clinguin_context(modal_opened,E).
