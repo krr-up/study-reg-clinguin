@@ -93,3 +93,10 @@ examination("822711","S","Seminar","PL",pm2,"COG").
 module_program("82280","Individual Research Module",im,15,"COG").
 examination("822811","PJ","Forschungsprojekt","PL",im,"COG").
 module_program("","Master's Thesis",msc,30,"COG").
+
+% ---------------
+% Custom info for modules sets
+set_name(m,"All Modules",4).
+set_name(p, "Project Seminars",2).
+set_name(o, "Elective Modules",3).
+set_name(b, "Mandatory Modules",1).

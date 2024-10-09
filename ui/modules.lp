@@ -73,7 +73,7 @@
     % Container for total credits under each semester
     elem(semester_credits_container(I), container, semester_container(I)) :- semester(I).
     attr(semester_credits_container(I), order, 3) :- semester(I).
-    attr(semester_credits_container(I), class, ("bg-light"; "p-2"; "mt-2"; "rounded"; "text-center"; "fw-bold"; "mt-auto")) :- semester(I).
+    attr(semester_credits_container(I), class, ("p-2"; "mt-2"; "rounded"; "text-center"; "fw-bold"; "mt-auto")) :- semester(I).
 
     % Label to display total credits for a semester
     elem(semester_credits_label(I), label, semester_credits_container(I)) :- semester(I).
@@ -86,11 +86,12 @@
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     % Container to display total credits across all semesters
-    elem(total_credits_display_container, container, center_section).
+    elem(total_credits_display_container, container, semester_control_container).
     attr(total_credits_display_container, order, 1).
-    attr(total_credits_display_container, class, ("bg-secondary"; "text-white"; "p-3"; "rounded"; "m-2"; "align-self-center")).
+    attr(total_credits_display_container, class, ( "p-3"; "rounded"; "m-2"; "align-self-center")).
+    % attr(total_credits_display_container, class, ("bg-secondary"; "text-white"; "p-3"; "rounded"; "m-2"; "align-self-center";"fw-bold")).
 
     % Label to display total credits
     elem(total_credits_label, label, total_credits_display_container).
-    attr(total_credits_label, label, @concat("Total credits: ", TC)) :-
+    attr(total_credits_label, label, @concat("<b>Assigned credits: </b>", TC, " ECTS")) :-
         TC = #sum{ C,E : map(c,E,C), shown_module(E,_) }.

@@ -83,9 +83,9 @@ attr(left_section, child_layout, flex).
 	attr(module_checkbox(E), disabled, true) :- _all(in(E,s)).
 
 	% Update the 'ignored' atom when a checkbox is clicked, but only if it's not mandatory
-	when(module_checkbox(E), click, call, remove_atom(ignored(E))) :- 
+	when(module_checkbox(E), click, call, remove_atom(ignored(E))) :-
 		in(E, _), ignored(E), not mandatory_module(E).
-	when(module_checkbox(E), click, call, (add_atom(ignored(E)), remove_assumption_signature(in(E, any)))) :- 
+	when(module_checkbox(E), click, call, (add_atom(ignored(E)), remove_assumption_signature(in(E, any)))) :-
 		in(E, _), not ignored(E), not mandatory_module(E).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

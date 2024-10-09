@@ -7,9 +7,9 @@
 
 	% Containers for subsets of modules
 	elem(subset_container(S), container, right_section) :- subset(E,S).
-	attr(subset_container(S), class, ("border-opacity-50";"fw-bold";"p-2";"rounded"; "border"; "border-secondary"; "border-2"; "col-12"; "col-sm-12"; "col-md-12"; "d-flex"; "flex-column")) :- subset(E,S).
+	attr(subset_container(S), class, ("bg-secondary";"bg-opacity-10";"fw-bold";"p-2";"m-2";"rounded"; "col-12"; "col-sm-12"; "col-md-12"; "d-flex"; "flex-column")) :- subset(E,S).
 	attr(subset_container(S), flex_direction, column) :- subset(E,S).
-	attr(subset_container(S), order, 2) :- subset(E,S).
+	attr(subset_container(S), order, O) :- subset(E,S),set_name(S,_,O).
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% Labels for Module Subsets
@@ -18,12 +18,12 @@
 	% Label container for subsets
 	elem(subset_label_container(S), container, subset_container(S)):-subset(E,S).
 	attr(subset_label_container(S), order, 1):-subset(E,S).
-	attr(subset_label_container(S), class, ("bg-secondary";"text-light";"fw-bold";"p-2";"mt-2";"mb-2";"rounded")):-subset(E,S).
+	attr(subset_label_container(S), class, ("fw-bold";"p-2";"mt-2";"mb-2";"rounded")):-subset(E,S).
 
 	% Label text for subsets
 	elem(subset_label(S), label, subset_label_container(S)):-subset(E,S).
-	attr(subset_label(S), label, @concat("Modules ", S)):-subset(E,S), S != m.
-	attr(subset_label(S), label, "All Modules"):-subset(E,m), S == m.
+	% attr(subset_label(S), label, @concat("Modules ", S)):-subset(E,S), S != m.
+	attr(subset_label(S), label, N):-subset(E,S), set_name(S,N,_).
 	attr(subset_label(S), order, 1):-subset(E,S).
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -41,14 +41,15 @@
 
 	% Button for modules in a subset
 	elem(subset_module_button(E,S), button, subset_modules_container(S)) :- in(E,S), subset(E,S).
-	attr(subset_module_button(E,S), label, E) :- in(E,S), subset(E,S).
-	attr(subset_module_button(E,S), class, ("btn-sm"; "m-1")) :- in(E,S), subset(E,S).
+	attr(subset_module_button(E,S), label, @concat(E,": ",EN)) :- in(E,S), subset(E,S), module_program(_, EN, E, _, _).
+	attr(subset_module_button(E,S), class, ("btn-sm"; "m-1";"text-start")) :- in(E,S), subset(E,S).
+	attr(subset_module_button(E,S), class, "w-100") :- in(E,S), subset(E,S).
 	attr(subset_module_button(E,S), class, "btn-secondary") :- in(E,S), subset(E,S), module_visibly_selected(E).
 	attr(subset_module_button(E,S), class, "btn-outline-secondary") :- in(E,S), subset(E,S), not module_visibly_selected(E).
 
 	% Add success/danger classes based on include/exclude preferences
-	attr(subset_module_button(E,S), class, "text-success") :- in(E,S), subset(E,S), user_preference(include(_),E).
-	attr(subset_module_button(E,S), class, "text-danger") :- in(E,S), subset(E,S), user_preference(exclude(_),E).
+	% attr(subset_module_button(E,S), class, "text-success") :- in(E,S), subset(E,S), user_preference(include(_),E).
+	% attr(subset_module_button(E,S), class, "text-danger") :- in(E,S), subset(E,S), user_preference(exclude(_),E).
 
 	% Add icons for hard/soft inclusion and exclusion preferences
 	attr(subset_module_button(E,S), icon, ("fa-solid"; "fa-thumbs-up")) :- in(E,S), subset(E,S), user_preference(include(hard),E).

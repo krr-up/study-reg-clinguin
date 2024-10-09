@@ -133,13 +133,13 @@ attr(module_info_modal(E), size, "lg") :- in(E,_), module_program(_, EN, E, _, _
 					when(pref_container(E,P), click, call, set_external(user_preference(P,E),false)) :- in(E,_), preference(P,M), user_preference(P,E).
 					when(pref_container(E,P), click, call, set_external(user_preference(P,E),true)) :- in(E,_), preference(P,M), not user_preference(P,E).
 					when(pref_container(E,P), click, context, (modal_opened,E)) :- in(E,_), preference(P,M).
-				
+
 					% Disable based on conditions
 					attr(pref_container(E,P), disabled, true) :- in(E,_), user_preference(P',E), preference(P,_), P'!=P.
 					attr(pref_container(E,include(hard;soft)), disabled, true) :- in(E,_), not _any(in(E,s(_))),use_preferences.
 					attr(pref_container(E,exclude(hard;soft)), disabled, true) :- in(E,_), _all(in(E,s(_))),use_preferences.
-					attr(pref_container(E,P), disabled, true) :- _all(in(E,s(I))), not _clinguin_assume(in(E,s(I)), true), preference(P,_).
-				
+					% attr(pref_container(E,P), disabled, true) :- _all(in(E,s(I))), not _clinguin_assume(in(E,s(I)), true), preference(P,_).
+
 				% Button container
 				elem(button_container(E), container, action_section(E)) :- in(E,_).
 				attr(button_container(E), class, ("d-flex"; "justify-content-center"; "align-items-center"; "gap-3"; "mb-3"; "mt-3")) :- in(E,_).
@@ -151,9 +151,8 @@ attr(module_info_modal(E), size, "lg") :- in(E,_), module_program(_, EN, E, _, _
 					attr(assign_semester_dropdown(E), class, ("btn"; "btn-outline-secondary")) :- not _all(in(E, s(_))), module_program(_, _, E, _, _).
 
 					% Show "Assigned to semester" if the module is already assigned
-					attr(assign_semester_dropdown(E), selected, "Assigned to semester") :-
-						_any(in(E, s(_))),
-						_all(in(E, s(_))),
+					attr(assign_semester_dropdown(E), selected, @concat("Assigned to Semester ",I)) :-
+						_all(in(E, s(I))),
 						module_program(_, _, E, _, _).
 					attr(assign_semester_dropdown(E), class, ("btn"; "btn-secondary")) :-
 						_any(in(E, s(_))),  % Module is assigned to at least one semester
@@ -178,11 +177,11 @@ attr(module_info_modal(E), size, "lg") :- in(E,_), module_program(_, EN, E, _, _
 						attr(remove_semester_option(E), class, "text-danger"; "text-opacity-75") :- module_program(_, _, E, _, _), in(E, s(I)).
 						attr(remove_semester_option(E), class, ("disabled"; "text-danger"; "text-opacity-50")) :- module_program(_, _, E, _, _), in(E, s(I)), not _clinguin_assume(in(E, s(I)), true).
 						when(remove_semester_option(E), click, call, remove_assumption(in(E, s(I)))) :- module_program(_, _, E, _, _), in(E, s(I)).
-						
+
 						% Assign module to a semester
 						elem(assign_semester_option(E, I), dropdown_menu_item, assign_semester_dropdown(E)) :-
 							module_program(_, _, E, _, _), semester(I).
-						
+
 						% Display semester number with a star for the current semester
 						attr(assign_semester_option(E, I), label, @concat("Semester ", I, " ★")) :-
 							module_program(_, _, E, _, _), semester(I), _all(in(E, s(I))).

@@ -18,22 +18,25 @@ semester_season(I, "<i class='fa fa-sun'></i>") :- semester(I), empty(int(m(w), 
 
     % Display current number of semesters with update option
     elem(semester_control_container, container, center_section).
-    attr(semester_control_container, order, 4).
-    attr(semester_control_container, flex_direction, column).
-    attr(semester_control_container, class, ("m-2")).
-    attr(semester_control_container, class, "align-self-center").
+    attr(semester_control_container, order, 1).
+    attr(semester_control_container, flex_direction, row).
+    attr(semester_control_container, class, ("m-2";"bg-info";"rounded";"bg-opacity-10";"align-self-center";"justify-content-between";"w-75")).
+
+    elem(semester_control_number_container, container, semester_control_container).
+    attr(semester_control_number_container, flex_direction, row).
+    attr(semester_control_number_container, class, ("p-2"; "m-2")).
 
     % Label showing current number of semesters
-    elem(semester_count_label, label, semester_control_container).
-    attr(semester_count_label, label, @concat("Current number of semesters: ", N)) :- _clinguin_const(n, N).
+    elem(semester_count_label, label, semester_control_number_container).
+    attr(semester_count_label, label, "Number of semesters: ").
     attr(semester_count_label, order, 1).
     attr(semester_count_label, class, ("fw-bold"; "p-2"; "m-2")).
 
     % Dropdown menu to select the number of semesters
-    elem(semester_dropdown, dropdown_menu, semester_control_container).
+    elem(semester_dropdown, dropdown_menu, semester_control_number_container).
     attr(semester_dropdown, order, 2).
-    attr(semester_dropdown, selected, "Change").
-    attr(semester_dropdown, class, ("btn-sm"; "btn-secondary"; "p-2"; "m-2")).
+    attr(semester_dropdown, selected, N):_clinguin_const(n, N).
+    attr(semester_dropdown, class, ("btn-sm"; "btn-outline-dark"; "p-2"; "m-2")).
 
     % Dropdown options for selecting semesters
     elem(semester_option(V), dropdown_menu_item, semester_dropdown) :- values(V).
@@ -52,9 +55,11 @@ semester_season(I, "<i class='fa fa-sun'></i>") :- semester(I), empty(int(m(w), 
     % Individual semester containers
     elem(semester_container(I), container, semester_display_container) :- semester(I).
     attr(semester_container(I), order, I) :- semester(I).
-    attr(semester_container(I), class, ("border-opacity-50"; "fw-bold"; "p-3"; "m-2"; "rounded"; "border"; "border-2"; "bg-light")) :- semester(I).
+    attr(semester_container(I), class, ("border-opacity-50"; "fw-bold"; "p-3"; "m-2"; "rounded"; "border"; "border-2"; "bg-opacity-10")) :- semester(I).
     attr(semester_container(I), class, ("border-warning")) :- semester(I), empty(int(m(w), s(I))).
     attr(semester_container(I), class, ("border-primary")) :- semester(I), empty(int(m(s), s(I))).
+    attr(semester_container(I), class, ("bg-warning")) :- semester(I), empty(int(m(w), s(I))).
+    attr(semester_container(I), class, ("bg-primary")) :- semester(I), empty(int(m(s), s(I))).
 
     % Header for each semester
     elem(semester_header_container(I), container, semester_container(I)) :- semester(I).
