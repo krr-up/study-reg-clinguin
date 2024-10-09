@@ -1,30 +1,26 @@
-# study-reg-clinguin
-Clinguin UI for Study regulations
+# Running Clinguin Program
+## Prerequisites
 
-### Usage
+- Python 3.10
 
-*Encodings from the paper.*
+## Instructions
 
-#### Without exams and with info:
+1. **Clone the repository and navigate to the project directory:**
+	```bash
+	git clone https://github.com/krr-up/study-reg-clinguin.git
+	cd study-reg-clinguin
+	```
 
-`meta.lp` - general encoding
+2. **Install the required dependencies:**
+	```bash
+	pip install -r requirements.txt
+	```
 
-`cogsys.lp` - instance for cogsys
+3. **Run the Clinguin server:**
+	```bash
+	clinguin client-server --domain-files instances/cogsys.lp encodings/meta.lp encodings/cogsys_info.lp encodings/preference.lp --ui-files encodings/ui_main.lp -c n=3
+	```
 
-`cogsys_info.lp` - cogsys program information
+### Clinguin Version
 
-```
-clinguin client-server --domain-files instances/cogsys.lp encodings/meta.lp encodings/cogsys_info.lp --ui-files encodings/ui_main.lp -c n=3
-```
-
-
-
-## Custom Backend
-
-### ~~custom_download(file_name)~~
-
-~~This function is specific to study regulation formatting. It allows users to download a study plan file with a specified name.~~
-
-
-### Clinguin version
 `Clinguin 2.0.0`
