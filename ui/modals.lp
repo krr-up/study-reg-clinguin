@@ -4,8 +4,9 @@
 
 % Modal for displaying module information
 elem(module_info_modal(E), modal, root_window) :- in(E,_).
-attr(module_info_modal(E), title, @concat(E)) :- in(E,_), module_program(_, _, E, _, _).
-attr(module_info_modal(E), size, "lg") :- in(E,_), module_program(_, EN, E, _, _).
+attr(module_info_modal(E), title, E) :- in(E,_).
+attr(module_info_modal(E), size, "lg") :- in(E,_).
+attr(module_info_modal(E), class, ("text-capitalize"; "h6")) :- in(E,_).
 
 	% Main container for modal content
 	elem(module_info_container(E), container, module_info_modal(E)) :- in(E,_).
@@ -223,7 +224,7 @@ attr(module_info_modal(E), size, "lg") :- in(E,_), module_program(_, EN, E, _, _
 					% Examination legend header
 					elem(exam_legend_header(E), label, exam_legend(E)) :- in(E,_).
 					attr(exam_legend_header(E), label, "Examination Types:") :- in(E,_).
-					attr(exam_legend_header(E), class, ("fw-bold"; "mb-2"; "d-block"; "small")) :- in(E,_).
+					attr(exam_legend_header(E), class, ("fw-bold"; "pt-2"; "d-block"; "small")) :- in(E,_).
 					attr(exam_legend_header(E), order, 1) :- in(E,_).
 
 					% Legend content container
@@ -234,27 +235,27 @@ attr(module_info_modal(E), size, "lg") :- in(E,_), module_program(_, EN, E, _, _
 						% PL badge
 						elem(exam_legend_pl_badge(E), label, exam_legend_content(E)) :- in(E,_).
 						attr(exam_legend_pl_badge(E), label, "PL") :- in(E,_).
-						attr(exam_legend_pl_badge(E), class, ("badge"; "rounded-pill"; "bg-success"; "small"; "px-2"; "py-1")) :- in(E,_).
+						attr(exam_legend_pl_badge(E), class, ("badge"; "rounded-pill"; "bg-success"; "small")) :- in(E,_).
 
 						% PL description
 						elem(exam_legend_pl_text(E), label, exam_legend_content(E)) :- in(E,_).
 						attr(exam_legend_pl_text(E), label, "Primary Examination (graded)") :- in(E,_).
-						attr(exam_legend_pl_text(E), class, ("small"; "me-2")) :- in(E,_).
+						attr(exam_legend_pl_text(E), class, ("small")) :- in(E,_).
 
 						% PNL badge
 						elem(exam_legend_pnl_badge(E), label, exam_legend_content(E)) :- in(E,_).
 						attr(exam_legend_pnl_badge(E), label, "PNL") :- in(E,_).
-						attr(exam_legend_pnl_badge(E), class, ("badge"; "rounded-pill"; "bg-warning"; "small"; "px-2"; "py-1")) :- in(E,_).
+						attr(exam_legend_pnl_badge(E), class, ("badge"; "rounded-pill"; "bg-warning"; "small")) :- in(E,_).
 
 						% PNL description
 						elem(exam_legend_pnl_text(E), label, exam_legend_content(E)) :- in(E,_).
 						attr(exam_legend_pnl_text(E), label, "Secondary Examination") :- in(E,_).
-						attr(exam_legend_pnl_text(E), class, ("small"; "me-2")) :- in(E,_).
+						attr(exam_legend_pnl_text(E), class, ("small")) :- in(E,_).
 
 						% SL badge
 						elem(exam_legend_sl_badge(E), label, exam_legend_content(E)) :- in(E,_).
 						attr(exam_legend_sl_badge(E), label, "SL") :- in(E,_).
-						attr(exam_legend_sl_badge(E), class, ("badge"; "rounded-pill"; "bg-info"; "small"; "px-2"; "py-1")) :- in(E,_).
+						attr(exam_legend_sl_badge(E), class, ("badge"; "rounded-pill"; "bg-info"; "small")) :- in(E,_).
 
 						% SL description
 						elem(exam_legend_sl_text(E), label, exam_legend_content(E)) :- in(E,_).

@@ -7,7 +7,7 @@
 
 	% Containers for subsets of modules
 	elem(subset_container(S), container, right_section) :- subset(E,S).
-	attr(subset_container(S), class, ("bg-secondary";"bg-opacity-10";"fw-bold";"p-2";"m-2";"rounded"; "col-12"; "col-sm-12"; "col-md-12"; "d-flex"; "flex-column")) :- subset(E,S).
+	attr(subset_container(S), class, ("bg-secondary";"bg-opacity-10";"fw-bold";"p-2";"m-2";"rounded"; "col-12"; "col-sm-12"; "col-md-12"; "d-flex"; "flex-column";"p-sm-4";"p-lg-3")) :- subset(E,S).
 	attr(subset_container(S), flex_direction, column) :- subset(E,S).
 	attr(subset_container(S), order, O) :- subset(E,S),set_name(S,_,O).
 
@@ -18,7 +18,7 @@
 	% Label container for subsets
 	elem(subset_label_container(S), container, subset_container(S)):-subset(E,S).
 	attr(subset_label_container(S), order, 1):-subset(E,S).
-	attr(subset_label_container(S), class, ("fw-bold";"p-2";"mt-2";"mb-2";"rounded")):-subset(E,S).
+	attr(subset_label_container(S), class, ("fw-bold";"pb-2";"mb-2";"rounded")):-subset(E,S).
 
 	% Label text for subsets
 	elem(subset_label(S), label, subset_label_container(S)):-subset(E,S).
@@ -33,7 +33,7 @@
 	% Display modules within each subset
 	elem(subset_modules_container(S), container, subset_container(S)) :- subset(E,S).
 	attr(subset_modules_container(S), order, 2):- subset(E,S).
-	attr(subset_modules_container(S), class, ("d-flex"; "flex-wrap"; "pt-2")):- subset(E,S).
+	attr(subset_modules_container(S), class, ("d-flex"; "flex-wrap"; "gap-2")):- subset(E,S).
 	attr(subset_modules_container(S), flex_direction, row) :- subset(E,S).
 
 	% Module is visibly selected if it is in a semester
@@ -42,8 +42,7 @@
 	% Button for modules in a subset
 	elem(subset_module_button(E,S), button, subset_modules_container(S)) :- in(E,S), subset(E,S).
 	attr(subset_module_button(E,S), label, @concat(E,": ",EN)) :- in(E,S), subset(E,S), module_program(_, EN, E, _, _).
-	attr(subset_module_button(E,S), class, ("btn-sm"; "m-1";"text-start")) :- in(E,S), subset(E,S).
-	attr(subset_module_button(E,S), class, "w-100") :- in(E,S), subset(E,S).
+	attr(subset_module_button(E,S), class, ("btn-sm"; "text-start"; "align-self-center"; "w-100")) :- in(E,S), subset(E,S).
 	attr(subset_module_button(E,S), class, "btn-secondary") :- in(E,S), subset(E,S), module_visibly_selected(E).
 	attr(subset_module_button(E,S), class, "btn-outline-secondary") :- in(E,S), subset(E,S), not module_visibly_selected(E).
 
@@ -84,7 +83,7 @@
 	% Container for progress bar showing credits completed
 	elem(progress_bar_container(S), container, subset_container(S)) :- subset(_, S).
 	attr(progress_bar_container(S), order, 4) :- subset(_, S).
-	attr(progress_bar_container(S), class, ("m-1"; "pt-3"; "mt-auto")) :- subset(_, S).
+	attr(progress_bar_container(S), class, ("pt-3"; "mt-auto")) :- subset(_, S).
 
 	% Progress bar indicating credit completion percentage
 	elem(subset_progress_bar(S), progress_bar, progress_bar_container(S)) :- subset(_, S).
