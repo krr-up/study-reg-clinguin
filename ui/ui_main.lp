@@ -18,6 +18,7 @@
 % Include the main menu bar logic
 #include "ui/menu_bar.lp".
 
+#include "ui/exams.lp".
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Root Window Configuration

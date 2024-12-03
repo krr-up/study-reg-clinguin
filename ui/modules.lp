@@ -10,8 +10,12 @@
 
 
     % Dropdown menu items to assign modules
-    module_addable_to_semester(E,I) :- in(E,_),semester(I), not _all(in(E,s(I))).
-    elem(assign_module_option(I,E), dropdown_menu_item, assign_module_dropdown(I)) :- module_addable_to_semester(E, I).
+	module_addable_to_semester(E,I) :- 
+		module_program(_, _, E, _, _),  % Only use module definitions
+		semester(I), 
+		not _all(in(E,s(I))).
+	
+	elem(assign_module_option(I,E), dropdown_menu_item, assign_module_dropdown(I)) :- module_addable_to_semester(E, I).
     attr(assign_module_option(I,E), label, @concat(E, " (", C, " ECTS)")) :- module_addable_to_semester(E, I), map(c, E, C).
     attr(assign_module_option(I,E), class, "disabled") :- module_addable_to_semester(E,I), not _any(in(E,s(I))).
     attr(assign_module_option(I,E), class, "opacity-50") :- module_addable_to_semester(E,I), not _any(in(E,s(I))).

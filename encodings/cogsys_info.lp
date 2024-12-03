@@ -46,56 +46,57 @@
 
 program("COG","Cognitive Systems: Language, Learning and Reasoning","MS","20142").
 module_program("55580","Machine Learning and Data Analysis",bm2,9,"COG").
-examination("555802","MP","Mündliche Prüfung","PL",bm2,"COG").
-examination("555812","V","Intelligent Data Analysis","SL",bm2,"COG").
-examination("555813","U","Intelligent Data Analysis","PNL",bm2,"COG").
+examination(ep_bm2__208555,"MP","Mündliche Prüfung","PL",bm2,"COG").
+examination(es_bm2__218555,"V","Intelligent Data Analysis","SL",bm2,"COG").
+examination(es_bm2__318555,"U","Intelligent Data Analysis","PNL",bm2,"COG").
 module_program("55590","Advanced Problem Solving Techniques",bm3,9,"COG").
-examination("555901","MP","Klausur","PL",bm3,"COG").
-examination("555911","V","Vorlesung","SL",bm3,"COG").
-examination("555912","U","Übung","SL",bm3,"COG").
-examination("555913","PR","Praktisches Arbeiten","PNL",bm3,"COG").
-examination("555914","PJ","Projekt","PNL",bm3,"COG").
+examination(ep_bm3__109555,"MP","Klausur","PL",bm3,"COG").
+examination(es_bm3__119555,"V","Vorlesung","SL",bm3,"COG").
+examination(es_bm3__219555,"U","Übung","SL",bm3,"COG").
+examination(es_bm3__319555,"PR","Praktisches Arbeiten","PNL",bm3,"COG").
+examination(es_bm3__419555,"PJ","Projekt","PNL",bm3,"COG").
 module_program("55600","Foundations of Computer Science",fm2,6,"COG").
-examination("556001","MP","Mündliche Prüfung","PL",fm2,"COG").
-examination("556011","V","Video-Vorlesung","SL",fm2,"COG").
-examination("556012","U","Übung","PNL",fm2,"COG").
+examination(ep_fm2__100655,"MP","Mündliche Prüfung","PL",fm2,"COG").
+examination(es_fm2__110655,"V","Video-Vorlesung","SL",fm2,"COG").
+examination(es_fm2__210655,"U","Übung","PNL",fm2,"COG").
 module_program("55610","Current Topics in Computational Intelligence 1",am31,6,"COG").
-examination("556111","V1","Vorlesung oder Seminar","PL",am31,"COG").
+examination(ep_am31__111655,"V1","Vorlesung oder Seminar","PL",am31,"COG").
 module_program("55620","Current Topics in Computational Intelligence 2",am32,6,"COG").
-examination("556211","V1","Vorlesung oder Seminar","PL",am32,"COG").
+examination(ep_am32__112655,"V1","Vorlesung oder Seminar","PL",am32,"COG").
 module_program("55630","Project in Computational Intelligence",pm3,12,"COG").
-examination("556311","S","Seminar","PL",pm3,"COG").
+examination(es_pm3__113655,"S","Seminar","PL",pm3,"COG").
 module_program("82190","Advanced Natural Language Processing",bm1,9,"COG").
-examination("821901","MP","Klausur","PL",bm1,"COG").
-examination("821902","MP","Abschlussprojekt","PL",bm1,"COG").
-examination("821911","V","Vorlesung","SL",bm1,"COG").
-examination("821912","U","Übung","PNL",bm1,"COG").
+examination(ep_bm1__109128,"MP","Klausur","PL",bm1,"COG").
+examination(ep_bm1__209128,"MP","Abschlussprojekt","PL",bm1,"COG").
+examination(es_bm1__119128,"V","Vorlesung","SL",bm1,"COG").
+examination(es_bm1__219128,"U","Übung","PNL",bm1,"COG").
 module_program("82200","Foundations of Mathematics",fm1,6,"COG").
-examination("822001","MP","Mündliche Prüfung","PL",fm1,"COG").
-examination("822011","V","Video-Vorlesung","SL",fm1,"COG").
-examination("822012","U","Übung","PNL",fm1,"COG").
+examination(ep_fm1__100228,"MP","Mündliche Prüfung","PL",fm1,"COG").
+examination(es_fm1__110228,"V","Video-Vorlesung","SL",fm1,"COG").
+examination(es_fm1__210228,"U","Übung","PNL",fm1,"COG").
 module_program("82210","Foundations of Linguistics",fm3,6,"COG").
-examination("822101","MP","Mündliche Prüfung","PL",fm3,"COG").
-examination("822111","V","Video-Vorlesung","SL",fm3,"COG").
-examination("822112","U","Übung","PNL",fm3,"COG").
+examination(ep_fm3__101228,"MP","Mündliche Prüfung","PL",fm3,"COG").
+examination(es_fm3__111228,"V","Video-Vorlesung","SL",fm3,"COG").
+examination(es_fm3__211228,"U","Übung","PNL",fm3,"COG").
 module_program("82220","Current Topics in Computational Linguistics 1",am11,6,"COG").
-examination("822211","V1","Vorlesung oder Seminar","PL",am11,"COG").
+examination(ep_am11__112228,"V1","Vorlesung oder Seminar","PL",am11,"COG").
 module_program("82230","Current Topics in Computational Linguistics 2",am12,6,"COG").
-examination("822311","V1","Vorlesung oder Seminar","PL",am12,"COG").
+examination(ep_am12__113228,"V1","Vorlesung oder Seminar","PL",am12,"COG").
 module_program("82240","Current Topics in Machine Learning 1",am21,6,"COG").
-examination("822411","V1","Vorlesung oder Seminar","PL",am21,"COG").
+examination(ep_am21__114228,"V1","Vorlesung oder Seminar","PL",am21,"COG").
 module_program("82250","Current Topics in Machine Learning 2",am22,6,"COG").
-examination("822511","V1","Vorlesung oder Seminar","PL",am22,"COG").
+examination(ep_am22__115228,"V1","Vorlesung oder Seminar","PL",am22,"COG").
 module_program("82260","Project in Computational Linguistics",pm1,12,"COG").
-examination("822611","S","Seminar","PL",pm1,"COG").
+examination(es_pm1__116228,"S","Seminar","PL",pm1,"COG").
 module_program("82270","Project in Machine Learning",pm2,12,"COG").
-examination("822711","S","Seminar","PL",pm2,"COG").
+examination(es_pm2__117228,"S","Seminar","PL",pm2,"COG").
 module_program("82280","Individual Research Module",im,15,"COG").
-examination("822811","PJ","Forschungsprojekt","PL",im,"COG").
+examination(ep_im__118228,"PJ","Forschungsprojekt","PL",im,"COG").
 module_program("","Master's Thesis",msc,30,"COG").
+examination(ep_msc,"","Master's Thesis","PL",msc,"COG").
+examination(es_msc,"","Master's Thesis","PL",msc,"COG").
 
-% ---------------
-% Custom info for modules sets
+% Custom module sets
 set_name(m,"All Modules",4).
 set_name(p, "Project Seminars",2).
 set_name(o, "Elective Modules",3).

@@ -71,47 +71,6 @@ attr(module_info_modal(E), class, ("text-capitalize"; "h6")) :- in(E,_).
 					elem(credits_label(E), label, credits_info(E)) :- module_program(_, _, E, C, _).
 					attr(credits_label(E), label, @concat("<strong>Credits:</strong> ", C)) :- module_program(_, _, E, C, _).
 
-			% Right column: Examinations (if available)
-			elem(exam_info_column(E), container, module_info_section(E)) :- examination(_, _, _, _, E, _).
-			attr(exam_info_column(E), class, ("flex-grow-1"; "w-50")) :- examination(_, _, _, _, E, _).
-			attr(exam_info_column(E), order, 2) :- examination(_, _, _, _, E, _).
-
-				% Examinations header
-				elem(exam_header(E), container, exam_info_column(E)) :- examination(_, _, _, _, E, _).
-				attr(exam_header(E), class, ("mb-3"; "p-3"; "bg-white"; "rounded"; "shadow-sm")) :- examination(_, _, _, _, E, _).
-				attr(exam_header(E), order, 1) :- examination(_, _, _, _, E, _).
-
-					% Examinations label
-					elem(exam_header_label(E), label, exam_header(E)) :- examination(_, _, _, _, E, _).
-					attr(exam_header_label(E), label, "<strong>Examinations</strong>") :- examination(_, _, _, _, E, _).
-					attr(exam_header_label(E), class, ("h5"; "mb-0")) :- examination(_, _, _, _, E, _).
-
-				% List of examinations
-				elem(exam_list(E), container, exam_info_column(E)) :- examination(_, _, _, _, E, _).
-				attr(exam_list(E), class, ("list-group"; "shadow-sm")) :- examination(_, _, _, _, E, _).
-				attr(exam_list(E), order, 2) :- examination(_, _, _, _, E, _).
-
-					% Individual examination items
-					elem(exam_item(E, ExamID), container, exam_list(E)) :- examination(ExamID, Form, Title, Type, E, _).
-					attr(exam_item(E, ExamID), class, ("list-group-item"; "d-flex"; "justify-content-between"; "align-items-center"; "py-3")) :-
-						examination(ExamID, _, _, _, E, _).
-					attr(exam_item(E, ExamID), order, ExamID) :- examination(ExamID, _, _, _, E, _).
-
-						% Examination title and form
-						elem(exam_title(E, ExamID), label, exam_item(E, ExamID)) :- examination(ExamID, Form, Title, _, E, _).
-						attr(exam_title(E, ExamID), label, @concat(Title, " (", Form, ")")) :- examination(ExamID, Form, Title, _, E, _).
-						attr(exam_title(E, ExamID), class, ("text-wrap"; "pe-2")) :- examination(ExamID, Form, Title, _, E, _).
-						attr(exam_title(E, ExamID), order, 1) :- examination(ExamID, _, _, _, E, _).
-
-						% Examination type badge
-						elem(exam_type(E, ExamID), label, exam_item(E, ExamID)) :- examination(ExamID, _, _, Type, E, _).
-						attr(exam_type(E, ExamID), label, Type) :- examination(ExamID, _, _, Type, E, _).
-						attr(exam_type(E, ExamID), class, ("badge"; "rounded-pill"; "bg-primary"; "ms-2")) :- examination(ExamID, _, _, Type, E, _).
-						attr(exam_type(E, ExamID), class, "bg-success") :- examination(ExamID, _, _, "PL", E, _).
-						attr(exam_type(E, ExamID), class, "bg-warning") :- examination(ExamID, _, _, "PNL", E, _).
-						attr(exam_type(E, ExamID), class, "bg-info") :- examination(ExamID, _, _, "SL", E, _).
-						attr(exam_type(E, ExamID), order, 2) :- examination(ExamID, _, _, _, E, _).
-
 			% Action section
 			elem(bottom_section(E), container, module_info_container(E)) :- in(E,_).
 			attr(bottom_section(E), class, ("pt-3"; "d-flex"; "flex-column")) :- in(E,_).
