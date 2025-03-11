@@ -11,7 +11,7 @@ in(E,m(X)) :- X = (s;w), in(E,m), map(s,E,X).
 set(A) :-      empty(A).
 set(A) :- subseteq(A,B).    set(A) :-   equal(A,B).
 set(B) :- subseteq(A,B).    set(B) :-   equal(A,B).
-set(A) :-   card(A,R,L).    set(A) :- sum(A,M,R,L).
+set(A) :-   card(A,R,L).    set(A) :- sum(A,E,R,L).
 %
 set(A) :- set( int(A,B)).   set(B) :- set(int(A,B)).
 set(A) :- set(before(A)).
@@ -32,6 +32,3 @@ in(E1,before(A)) :- set(before(A)), in(E1,s(I)), in(E2,A), in(E2,s(J)), I < J.
 :- sum(A,F,bw,(L,U)), not L #sum{ V,E : in(E,A), map(F,E,V) } U.
 :- sum(A,F,geq,   L), not L #sum{ V,E : in(E,A), map(F,E,V) }.
 
-% display
-%#show.                   
-%#show (M,I) : in(M,s(I)).

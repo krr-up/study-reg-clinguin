@@ -1,4 +1,20 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% Sidebar for Module Subsets
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	elem(subset_sidebar, sidebar, root_window).
+	attr(subset_sidebar, position, "end").
+	attr(subset_sidebar, class, (
+		"d-flex";
+		"flex-column";
+		"bg-light";
+		"bg-opacity-100";
+		"border";
+		"border-1")).
+
+	elem(sidebar_container, container, subset_sidebar).
+	attr(sidebar_container, class, ("mt-5")).
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% Containers for Module Subsets
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -6,35 +22,51 @@
 	subset(E,S) :- map(l, S, _); map(u, S, _), in(E, S).
 
 	% Containers for subsets of modules
-	elem(subset_container(S), container, right_section) :- subset(E,S).
-	attr(subset_container(S), class, ("bg-secondary";"bg-opacity-10";"fw-bold";"p-2";"m-2";"rounded"; "col-12"; "col-sm-12"; "col-md-12"; "d-flex"; "flex-column";"p-sm-4";"p-lg-3")) :- subset(E,S).
+	elem(subset_container(S), container, sidebar_container) :- subset(E,S).
+	attr(subset_container(S), class, (
+		"bg-secondary";
+		"bg-opacity-10";
+		"fw-bold";"p-2";
+		"m-2";"rounded"; 
+		"col-12"; 
+		"col-sm-12"; 
+		"col-md-12"; 
+		"d-flex"; 
+		"flex-column";
+		"p-sm-4";
+		"p-lg-3"; 
+		"border"; 
+		"border-info"; 
+		"border-2")) :- subset(E,S).
 	attr(subset_container(S), flex_direction, column) :- subset(E,S).
 	attr(subset_container(S), order, O) :- subset(E,S),set_name(S,_,O).
 
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	% Labels for Module Subsets
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-	% Label container for subsets
-	elem(subset_label_container(S), container, subset_container(S)):-subset(E,S).
-	attr(subset_label_container(S), order, 1):-subset(E,S).
-	attr(subset_label_container(S), class, ("fw-bold";"pb-2";"mb-2";"rounded")):-subset(E,S).
+		% Collapse component
+		elem(subset_collapse(S), collapse, subset_container(S)) :- subset(E,S).
+		attr(subset_collapse(S), order, 1) :- subset(E,S).
+		attr(subset_collapse(S), label, N) :- subset(E,S), set_name(S,N,_).
 
-	% Label text for subsets
-	elem(subset_label(S), label, subset_label_container(S)):-subset(E,S).
-	% attr(subset_label(S), label, @concat("Modules ", S)):-subset(E,S), S != m.
-	attr(subset_label(S), label, N):-subset(E,S), set_name(S,N,_).
-	attr(subset_label(S), order, 1):-subset(E,S).
+		% Button styling
+		attr(subset_collapse(S), class, (
+			"d-flex"; 
+			"align-items-center"; 
+			"w-100";
+			"gap-2";
+			"p-2";           
+			"border-0";      
+			"bg-transparent";
+			"text-dark";
+			"fw-bold";
+			"fs-5"          
+		)) :- subset(E,S).
 
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	% Display Modules in Subsets
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-	% Display modules within each subset
-	elem(subset_modules_container(S), container, subset_container(S)) :- subset(E,S).
-	attr(subset_modules_container(S), order, 2):- subset(E,S).
-	attr(subset_modules_container(S), class, ("d-flex"; "flex-wrap"; "gap-2")):- subset(E,S).
-	attr(subset_modules_container(S), flex_direction, row) :- subset(E,S).
+% Place modules container inside the collapse component
+elem(subset_modules_container(S), container, subset_collapse(S)) :- subset(E,S).
+attr(subset_modules_container(S), order, 1) :- subset(E,S).
+attr(subset_modules_container(S), class, ("d-flex"; "flex-wrap"; "gap-2")) :- subset(E,S).
+attr(subset_modules_container(S), flex_direction, row) :- subset(E,S).
 
 	% Module is visibly selected if it is in a semester
 	module_visibly_selected(E) :- shown_module(E, I), semester(I).
@@ -45,10 +77,6 @@
 	attr(subset_module_button(E,S), class, ("btn-sm"; "text-start"; "align-self-center"; "w-100")) :- in(E,S), subset(E,S).
 	attr(subset_module_button(E,S), class, "btn-secondary") :- in(E,S), subset(E,S), module_visibly_selected(E).
 	attr(subset_module_button(E,S), class, "btn-outline-secondary") :- in(E,S), subset(E,S), not module_visibly_selected(E).
-
-	% Add success/danger classes based on include/exclude preferences
-	% attr(subset_module_button(E,S), class, "text-success") :- in(E,S), subset(E,S), user_preference(include(_),E).
-	% attr(subset_module_button(E,S), class, "text-danger") :- in(E,S), subset(E,S), user_preference(exclude(_),E).
 
 	% Add icons for hard/soft inclusion and exclusion preferences
 	attr(subset_module_button(E,S), icon, ("fa-solid"; "fa-thumbs-up")) :- in(E,S), subset(E,S), user_preference(include(hard),E).
@@ -81,7 +109,7 @@
 		Percentage = (TotalCredits * 100) / LowerBound.
 
 	% Container for progress bar showing credits completed
-	elem(progress_bar_container(S), container, subset_container(S)) :- subset(_, S).
+	elem(progress_bar_container(S), container, subset_collapse(S)) :- subset(_, S).
 	attr(progress_bar_container(S), order, 4) :- subset(_, S).
 	attr(progress_bar_container(S), class, ("pt-3"; "mt-auto")) :- subset(_, S).
 

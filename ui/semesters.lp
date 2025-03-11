@@ -13,18 +13,30 @@ semester_season(I, "<i class='fa fa-snowflake'></i>") :- semester(I), empty(int(
 semester_season(I, "<i class='fa fa-sun'></i>") :- semester(I), empty(int(m(w), s(I))).
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Center Section Configuration - Semester Control
+    % Information Panel
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     % Display current number of semesters with update option
     elem(semester_control_container, container, center_section).
     attr(semester_control_container, order, 1).
     attr(semester_control_container, flex_direction, row).
-    attr(semester_control_container, class, ("m-2";"bg-info";"rounded";"bg-opacity-10";"align-self-center";"justify-content-between";"w-75")).
+    attr(semester_control_container, class, (
+		"m-4";
+		"bg-info";
+		"rounded";
+		"bg-opacity-10";
+		"align-self-center";
+		"justify-content-center";
+		"w-100"; 
+		"border"; 
+		"border-info"; 
+		"border-2"; 
+		"gap-5")).
 
     elem(semester_control_number_container, container, semester_control_container).
     attr(semester_control_number_container, flex_direction, row).
     attr(semester_control_number_container, class, ("p-2"; "m-2")).
+	attr(semester_control_number_container, order, 1).
 
     % Label showing current number of semesters
     elem(semester_count_label, label, semester_control_number_container).
@@ -42,6 +54,21 @@ semester_season(I, "<i class='fa fa-sun'></i>") :- semester(I), empty(int(m(w), 
     elem(semester_option(V), dropdown_menu_item, semester_dropdown) :- values(V).
     attr(semester_option(V), label, V) :- values(V).
     when(semester_option(V), click, call, set_constant("n", V)) :- values(V).
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Display of Total Credits at the Top of the Page
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    % Container to display total credits across all semesters
+    elem(total_credits_display_container, container, semester_control_container).
+    attr(total_credits_display_container, order, 2).
+    attr(total_credits_display_container, class, ( "p-3"; "rounded"; "m-2"; "align-self-center")).
+    % attr(total_credits_display_container, class, ("bg-secondary"; "text-white"; "p-3"; "rounded"; "m-2"; "align-self-center";"fw-bold")).
+
+    % Label to display total credits
+    elem(total_credits_label, label, total_credits_display_container).
+    attr(total_credits_label, label, @concat("<b>Assigned credits: </b>", TC, " ECTS")) :-
+        TC = #sum{ C,E : map(c,E,C), shown_module(E,_) }.
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Semester Display

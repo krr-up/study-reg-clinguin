@@ -17,10 +17,17 @@
 	```
 
 3. **Run the Clinguin server:**
+	### Without examination tasks
 	```bash
-	clinguin client-server --domain-files instances/cogsys.lp encodings/meta.lp encodings/cogsys_info.lp encodings/preference.lp --ui-files ui/ui_main.lp -c n=3
+	clinguin client-server --domain-files instances/cogsys.lp encodings/encoding.lp encodings/cogsys_info.lp encodings/preference.lp --ui-files ui/ui_main.lp -c n=4
 	```
+
+	### With examination tasks
+	```bash
+	clinguin client-server --domain-files instances/cogsys.lp instances/cogsys-examinations.lp instances/test-cogsys-exams.lp encodings/encoding-examinations.lp encodings/cogsys_info.lp encodings/preference.lp --ui-files ui/ui_main.lp -c n=4
+	```
+
 
 ### Clinguin Version
 
-`Clinguin 2.0.0`
+`Clinguin 2.3.1`
