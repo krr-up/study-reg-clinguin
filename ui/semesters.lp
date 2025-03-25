@@ -87,7 +87,7 @@ semester_season(I, "<i class='fa fa-sun'></i>") :- semester(I), empty(int(m(w), 
     attr(semester_container(I), class, ("border-primary")) :- semester(I), empty(int(m(s), s(I))).
     attr(semester_container(I), class, ("bg-warning")) :- semester(I), empty(int(m(w), s(I))).
     attr(semester_container(I), class, ("bg-primary")) :- semester(I), empty(int(m(s), s(I))).
-
+	attr(semester_container(I), width, 250) :- semester(I).
     % Header for each semester
     elem(semester_header_container(I), container, semester_container(I)) :- semester(I).
     attr(semester_header_container(I), order, 1) :- semester(I).

@@ -96,9 +96,13 @@ attr(module_info_modal(E), class, ("text-capitalize"; "h6")) :- in(E,_).
 
 					% Disable based on conditions
 					attr(pref_container(E,P), disabled, true) :- in(E,_), user_preference(P',E), preference(P,_), P'!=P.
-					attr(pref_container(E,include(hard;soft)), disabled, true) :- in(E,_), not _any(in(E,s(_))),use_preferences.
-					attr(pref_container(E,exclude(hard;soft)), disabled, true) :- in(E,_), _all(in(E,s(_))),use_preferences.
-					% attr(pref_container(E,P), disabled, true) :- _all(in(E,s(I))), not _clinguin_assume(in(E,s(I)), true), preference(P,_).
+					% Disables include
+					attr(pref_container(E,include(hard;soft)), disabled, true) :- module_program(_, _, E, _, _), _all(in(E, s(_))), not _any(module_addable_to_semester(E, _)), preference(include(_),_).
+					attr(pref_container(E,include(hard;soft)), disabled, true) :- module_program(_, _, E, _, _), not _any(in(E, s(_))), not _any(module_addable_to_semester(E, _)), preference(include(_),_).
+
+					% Disables exclude
+					attr(pref_container(E,exclude(hard;soft)), disabled, true) :- module_program(_, _, E, _, _), _all(in(E, s(_))), not _any(module_addable_to_semester(E, _)), preference(exclude(_),_).
+					attr(pref_container(E,exclude(hard;soft)), disabled, true) :- module_program(_, _, E, _, _), not _any(in(E, s(_))), not _any(module_addable_to_semester(E, _)), preference(exclude(_),_).
 
 				% Button container
 				elem(button_container(E), container, action_section(E)) :- in(E,_).

@@ -4,7 +4,7 @@
 
 % Main menu bar configuration
 elem(menu_bar, menu_bar, root_window).
-attr(menu_bar, title, "Study Regulations").
+attr(menu_bar, title, T) :- program(_,T,_,_).
 attr(menu_bar, icon, "fa-graduation-cap").
 
 % Button to clear all assumptions
