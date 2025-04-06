@@ -19,15 +19,26 @@
 3. **Run the Clinguin server:**
 	### Without examination tasks
 	```bash
-	clinguin client-server --domain-files instances/cogsys.lp encodings/encoding.lp encodings/cogsys_info.lp encodings/preference.lp --ui-files ui/ui_main.lp -c n=4
+	clinguin client-server --domain-files instances/cogsys.lp encodings/encoding.lp instances/cogsys_info.lp encodings/preference.lp --ui-files ui/ui_main.lp -c n=4
 	```
 
 	### With examination tasks
 	```bash
-	clinguin client-server --domain-files instances/cogsys.lp instances/cogsys-examinations.lp instances/test-cogsys-exams.lp encodings/encoding-examinations.lp encodings/cogsys_info.lp encodings/preference.lp --ui-files ui/ui_main.lp -c n=4
+	clinguin client-server --domain-files instances/instance_main.lp encodings/encoding-examinations.lp encodings/preference.lp --ui-files ui/ui_main.lp -c n=4
+	```
+
+	### With custom backend
+	```
+	clinguin client-server --domain-files encodings/encoding-examinations.lp encodings/preference.lp --instance-files instances/instance_main.lp --ui-files ui/ui_main.lp -c n=4 --custom-classes custom_clingo_backend.py --backend CustomClingoBackend
+	```
+
+	### Test with custom backend
+	```
+	clinguin client-server --domain-files example/encoding.lp --instance-files example/i1.lp example/i2.lp --ui-files example/ui.lp --custom-classes custom_clingo_backend.py --backend CustomClingoBackend```
 	```
 
 
 ### Clinguin Version
 
 `Clinguin 2.3.1`
+
